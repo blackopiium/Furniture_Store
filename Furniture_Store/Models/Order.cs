@@ -4,14 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Furniture_Store.Data;
 
 
 namespace Furniture_Store.Models
 {
     [Table("Order")]
-    public class Order
+    public class Order : IEntity
     {
-        public int OrderId { get; set; }
+        public int Id { get; set; }
         public int ClientId { get; set; }
         public float Price { get; set; }
         public string Country { get; set; }

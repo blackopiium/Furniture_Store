@@ -4,13 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Furniture_Store.Data;
 
 namespace Furniture_Store.Models
 {
     [Table("Client")]
-    public class Client
+    public class Client : IEntity
     {
-        public int ClientId { get; set; }
+        public int Id { get; set; }
         public string LastName { get; set; }
         public string FirstName { get; set; }
         public string MiddleName { get; set; }

@@ -20,7 +20,7 @@ namespace Furniture_Store.Migrations
 
             modelBuilder.Entity("Furniture_Store.Models.Category", b =>
                 {
-                    b.Property<int>("CategoryId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -31,9 +31,17 @@ namespace Furniture_Store.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("CategoryId");
+                    b.HasKey("Id");
 
                     b.ToTable("Category");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "The best coach for every person only here",
+                            Name = "Coaches"
+                        });
                 });
 
             modelBuilder.Entity("Furniture_Store.Models.Charachteristics_Item", b =>
@@ -68,7 +76,7 @@ namespace Furniture_Store.Migrations
 
             modelBuilder.Entity("Furniture_Store.Models.Client", b =>
                 {
-                    b.Property<int>("ClientId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -91,14 +99,14 @@ namespace Furniture_Store.Migrations
                     b.Property<string>("Phone_Number")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ClientId");
+                    b.HasKey("Id");
 
                     b.ToTable("Client");
                 });
 
             modelBuilder.Entity("Furniture_Store.Models.Factory", b =>
                 {
-                    b.Property<int>("FactoryId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -115,14 +123,24 @@ namespace Furniture_Store.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("FactoryId");
+                    b.HasKey("Id");
 
                     b.ToTable("Factory");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 2,
+                            City = "Kyiv",
+                            Country = "Ukraine",
+                            Description = "The Ukrainian Factory of the modern furniture",
+                            Name = "Frankof"
+                        });
                 });
 
             modelBuilder.Entity("Furniture_Store.Models.Item", b =>
                 {
-                    b.Property<int>("ItemId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -139,18 +157,28 @@ namespace Furniture_Store.Migrations
                     b.Property<float>("Price")
                         .HasColumnType("real");
 
-                    b.HasKey("ItemId");
+                    b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
                     b.HasIndex("FactoryId");
 
                     b.ToTable("Item");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CategoryId = 1,
+                            FactoryId = 2,
+                            Name = "Marsek",
+                            Price = 27000f
+                        });
                 });
 
             modelBuilder.Entity("Furniture_Store.Models.Order", b =>
                 {
-                    b.Property<int>("OrderId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -173,7 +201,7 @@ namespace Furniture_Store.Migrations
                     b.Property<string>("Street")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("OrderId");
+                    b.HasKey("Id");
 
                     b.HasIndex("ClientId");
 
