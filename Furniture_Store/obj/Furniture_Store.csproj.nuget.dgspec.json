@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Admin\\OneDrive\\Документы\\Store\\Furniture_Store\\Furniture_Store\\Furniture_Store.csproj": {}
+    "C:\\Users\\Admin\\OneDrive\\Документы\\Furniture_Store\\Furniture_Store\\Furniture_Store.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Admin\\OneDrive\\Документы\\Store\\Furniture_Store\\Furniture_Store\\Furniture_Store.csproj": {
+    "C:\\Users\\Admin\\OneDrive\\Документы\\Furniture_Store\\Furniture_Store\\Furniture_Store.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Admin\\OneDrive\\Документы\\Store\\Furniture_Store\\Furniture_Store\\Furniture_Store.csproj",
+        "projectUniqueName": "C:\\Users\\Admin\\OneDrive\\Документы\\Furniture_Store\\Furniture_Store\\Furniture_Store.csproj",
         "projectName": "Furniture_Store",
-        "projectPath": "C:\\Users\\Admin\\OneDrive\\Документы\\Store\\Furniture_Store\\Furniture_Store\\Furniture_Store.csproj",
+        "projectPath": "C:\\Users\\Admin\\OneDrive\\Документы\\Furniture_Store\\Furniture_Store\\Furniture_Store.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Admin\\OneDrive\\Документы\\Store\\Furniture_Store\\Furniture_Store\\obj\\",
+        "outputPath": "C:\\Users\\Admin\\OneDrive\\Документы\\Furniture_Store\\Furniture_Store\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -41,6 +41,10 @@
       "frameworks": {
         "netcoreapp3.1": {
           "dependencies": {
+            "AutoMapper": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[3.1.3, )"

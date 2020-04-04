@@ -10,7 +10,7 @@ using Furniture_Store.Data;
 namespace Furniture_Store.Models
 {
     [Table("Order")]
-    public class Order : IEntity
+    public class Order 
     {
         public int Id { get; set; }
         public int ClientId { get; set; }

@@ -34,9 +34,9 @@ namespace Furniture_Store
 
             services.AddDbContext<RepositoryContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("RepositoryContext")));
-            services.AddScoped<EFCoreItemRepository>();
+            /*services.AddScoped<EFCoreItemRepository>();
             services.AddScoped<EFCoreCategoryRepository>();
-            services.AddScoped<EFCoreFactoryRepository>();
+            services.AddScoped<EFCoreFactoryRepository>();*/
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

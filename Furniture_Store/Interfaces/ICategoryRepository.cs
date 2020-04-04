@@ -5,14 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-
 namespace Furniture_Store.Data.EFCore
 {
-    public class EFCoreFactoryRepository : EFCoreRepository<Factory, RepositoryContext>
+    public interface ICategoryRepository : IRepository<Category>
     {
-        public EFCoreFactoryRepository(RepositoryContext context) : base(context)
-        {
-
-        }
+       
     }
 }

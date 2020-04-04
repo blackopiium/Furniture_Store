@@ -7,11 +7,7 @@ using Furniture_Store.Data.EFCore;
 
 namespace Furniture_Store.Data.EFCore
 {
-    public class EFCoreItemRepository : EFCoreRepository<Item, RepositoryContext>
+    public interface IItemRepository : IRepository<Item>
     {
-        public EFCoreItemRepository(RepositoryContext context) : base(context)
-        {
-
-        }
     }
 }

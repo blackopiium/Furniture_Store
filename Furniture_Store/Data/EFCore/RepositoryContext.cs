@@ -9,6 +9,10 @@ namespace Furniture_Store.Models
 {
     public class RepositoryContext : DbContext
     {
+        public RepositoryContext()
+        {
+        }
+
         public RepositoryContext(DbContextOptions options)
             : base(options)
         {
