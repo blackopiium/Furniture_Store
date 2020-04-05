@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Furniture_Store.Data.EFCore
 {
-    public class FactoryRepository : GenericRepository<Item>, IFactoryRepository
+    public class FactoryRepository : GenericRepository<Factory>, IFactoryRepository
     {
         private readonly RepositoryContext _repositoryContext;
         public FactoryRepository(RepositoryContext context)

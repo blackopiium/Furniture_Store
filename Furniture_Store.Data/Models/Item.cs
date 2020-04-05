@@ -18,7 +18,7 @@ namespace Furniture_Store.Models
         public int FactoryId { get; set; }
         public Charachteristics_Item Charachteristics_Item { get; set; }
         public Category Category { get; set; }
-        public Item Factory { get; set; }
+        public Factory Factory { get; set; }
         public List<Order_Items> Order_Items { get; set; }
 
     }

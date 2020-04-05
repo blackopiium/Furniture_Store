@@ -13,6 +13,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Furniture_Store.Data;
 using Furniture_Store.Data.EFCore;
+using Furniture_Store.Interfaces;
+using Furniture_Store.Data.Interfaces;
+using Furniture_Store.Data.Data.EFCore;
 
 namespace Furniture_Store
 {
@@ -34,9 +37,15 @@ namespace Furniture_Store
 
             services.AddDbContext<RepositoryContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("RepositoryContext")));
-            /*services.AddScoped<EFCoreItemRepository>();
-            services.AddScoped<EFCoreCategoryRepository>();
-            services.AddScoped<EFCoreFactoryRepository>();*/
+            services.AddMvc();
+            services.AddScoped<IItemRepository, ItemRepository>();
+           services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IFactoryRepository, FactoryRepository>();
+            services.AddScoped<IClientRepository, CLientRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<ICharachteristics_ItemRepository, Charachteristics_ItemRepository>();
+            services.AddScoped<IOrder_Items_Repository, Order_ItemsRepository>();
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
