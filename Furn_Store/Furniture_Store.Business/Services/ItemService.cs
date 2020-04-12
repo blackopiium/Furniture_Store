@@ -2,7 +2,7 @@
 using Furniture_Store.Business.DTO;
 using Furniture_Store.Business.Interfaces;
 using Furniture_Store.Models;
-using Furniture_Store.UnitOfWork;
+using Furniture_Store.UnitOfWorkFolder;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

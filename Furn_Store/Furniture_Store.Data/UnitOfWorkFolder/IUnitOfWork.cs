@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Furniture_Store.Interfaces;
 using Furniture_Store.Data.Interfaces;
 
-namespace Furniture_Store.UnitOfWork
+namespace Furniture_Store.UnitOfWorkFolder
 {
     public interface IUnitOfWork : IDisposable
     {

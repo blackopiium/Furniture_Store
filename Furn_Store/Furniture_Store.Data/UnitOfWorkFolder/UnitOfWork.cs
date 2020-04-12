@@ -4,12 +4,13 @@ using Furniture_Store.Data.EFCore;
 using Furniture_Store.Data.Interfaces;
 using Furniture_Store.Interfaces;
 using Furniture_Store.Models;
+using Furniture_Store.UnitOfWorkFolder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Furniture_Store.UnitOfWork
+namespace Furniture_Store.UnitOfWorkFolder
 {
     public class UnitOfWork : IUnitOfWork
     {

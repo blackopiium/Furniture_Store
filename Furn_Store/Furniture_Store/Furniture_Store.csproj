@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Furniture_Store.Business\Furniture_Store.Business.csproj" />
     <ProjectReference Include="..\Furniture_Store.Data\Furniture_Store.Data.csproj" />
   </ItemGroup>
 
