@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Furniture_Store.Data.Models;
 using Furniture_Store.Data.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,9 +13,11 @@ namespace Furniture_Store.Controllers
     public class AccountController : Controller
     {
         private readonly IMapper _mapper;
-        public AccountController(IMapper mapper)
+        private readonly UserManager<User> _userManager;
+        public AccountController(IMapper mapper, UserManager<User> userManager )
         {
             _mapper = mapper;
+            _userManager = userManager;
         }
         [HttpGet]
         public IActionResult Register()
@@ -21,9 +25,29 @@ namespace Furniture_Store.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Register(RegisterViewModel registerViewModel)
+        public async Task<IActionResult> Register(RegisterViewModel registerModel)
         {
-            return View();
+            if (!ModelState.IsValid)
+            {
+                return View(registerModel);
+            }
+
+            var user = _mapper.Map<User>(registerModel);
+
+            var result = await _userManager.CreateAsync(user, registerModel.Password);
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.TryAddModelError(error.Code, error.Description);
+                }
+
+                return View(registerModel);
+            }
+
+            await _userManager.AddToRoleAsync(user, "Visitor");
+
+            return RedirectToAction(nameof(ItemController.Index), "Home");
         }
     }
 }

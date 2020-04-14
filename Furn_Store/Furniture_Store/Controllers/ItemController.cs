@@ -15,6 +15,11 @@ namespace Furniture_Store.Controllers
         {
             _repository = repository;
         }
+        public IActionResult Index()
+        {
+            return View();
+        }
+
         [HttpGet]
         [Route("Item")]
         public IEnumerable<Item> GetAllItems() => _repository.GetAll();
