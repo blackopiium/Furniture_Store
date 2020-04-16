@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Furniture_Store.Data.Interfaces
 {
-   public interface IOrder_Items_Repository : IRepository<Order_Items>
+   public interface IOrder_Items_Repository : IRepository<Order_Items, int>
     {
     }
 }

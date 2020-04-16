@@ -14,25 +14,41 @@ namespace Furniture_Store.Business.Services
     public class ItemService : IItemService
     {
         IUnitOfWork _uow { get; set; }
-        public ItemService(IUnitOfWork uow)
+       private IMapper _mapper;
+        public ItemService(IUnitOfWork uow, IMapper mapper)
         {
             _uow = uow;
+            _mapper = mapper;
         }
-       /* public async Task<IEnumerable<ItemDTO>> GetAllItems()
+       public async Task<IEnumerable<ItemDTO>> GetAllItems()
         {
-            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ItemDTO, ItemDTO>()).CreateMapper();
-            return mapper.Map<IEnumerable<Item>, List<ItemDTO>>(_uow.Items.GetAll());
-        }*/
-        /*public ItemDTO GetItem(int? id)
+            var x = await _uow.Items.GetAll();
+            List<ItemDTO> result = new List<ItemDTO>();
+            foreach (var element in x)
+                result.Add(_mapper.Map<Item, ItemDTO>(element));
+            return result;
+            
+        }
+       public async Task <ItemDTO> GetItem(int id)
         {
-            if (id == null)
-                throw new ValidationException("Cant find id of item");
-            var item = _uow.Items.GetById(id.Value);
-            if (item == null)
-                throw new ValidationException("Cant find the item");
-            return new ItemDTO { Id = item.Id, Name = item.Name, CategoryId = item.CategoryId, FactoryId = item.FactoryId, Price = item.Price };
-        }*/
+            var x = await _uow.Items.GetById(id);
+            return _mapper.Map<Item, ItemDTO>(x);
 
+        }
+        public async Task<int> AddItem(ItemDTO item)
+        {
+            var x = _mapper.Map<ItemDTO, Item>(item);
+            return await _uow.Items.Add(x);
+        }
+        public async Task UpdateItem(ItemDTO item)
+        {
+            var x = _mapper.Map<ItemDTO, Item>(item);
+            await _uow.Items.Update(x);
+        }
+        public async Task DeleteItem(int id)
+        {
+            await _uow.Items.Remove(id);
+        }
         public void Dispose()
         {
             _uow.Dispose();

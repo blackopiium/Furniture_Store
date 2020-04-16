@@ -9,8 +9,11 @@ namespace Furniture_Store.Business.Interfaces
 {
     public interface IItemService
     {
-       /* Task<IEnumerable<ItemDTO>> GetAllItems();*/
-        /*ItemDTO GetItem(int? id);*/
+        Task<IEnumerable<ItemDTO>> GetAllItems();
+        Task<ItemDTO> GetItem(int id);
+        Task UpdateItem(ItemDTO item);
+        Task<int> AddItem(ItemDTO item);
+        Task DeleteItem(int id);
         void Dispose();
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Furniture_Store.Data.EFCore
 {
-    public class OrderRepository : GenericRepository<Order>, IOrderRepository
+    public class OrderRepository : GenericRepository<Order, int>, IOrderRepository
     {
         private readonly RepositoryContext _repositoryContext;
         public OrderRepository(RepositoryContext context)

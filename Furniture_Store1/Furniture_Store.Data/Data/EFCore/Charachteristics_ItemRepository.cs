@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Furniture_Store.Data.Data.EFCore
 {
-    public class Charachteristics_ItemRepository : GenericRepository<Charachteristics_Item>, ICharachteristics_ItemRepository
+    public class Charachteristics_ItemRepository : GenericRepository<Charachteristics_Item, int>, ICharachteristics_ItemRepository
     {
         private readonly RepositoryContext _repositoryContext;
         public Charachteristics_ItemRepository(RepositoryContext context)

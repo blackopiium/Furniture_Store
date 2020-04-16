@@ -7,7 +7,7 @@ using Furniture_Store.Data.EFCore;
 
 namespace Furniture_Store.Data.EFCore
 {
-    public interface IItemRepository : IRepository<Item>
+    public interface IItemRepository : IRepository<Item, int>
     {
     }
 }

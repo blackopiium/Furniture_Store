@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Furniture_Store.Business.DTO;
 using Furniture_Store.Business.Interfaces;
 using Furniture_Store.Business.Services;
 using Furniture_Store.Data.Data.EFCore;
@@ -42,8 +43,18 @@ namespace Furn_Store
           /*  services.AddDbContext<RepositoryContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("RepositoryContext")));*/
             services.AddMvc();
-            services.AddAutoMapper(typeof(Startup));
+            services.AddAutoMapper(cfg=>
+            {
+                cfg.CreateMap<Item, ItemDTO>();
+                cfg.CreateMap<Category, CategoryDTO>();
+                cfg.CreateMap<Factory, FactoryDTO>();
+                cfg.CreateMap<Order, OrderDTO>();
+                cfg.CreateMap<Charachteristics_Item, Charachteristic_Item_DTO>();
+                cfg.CreateMap<Client, ClientDTO>();
+                cfg.CreateMap<Order_Items, Order_Items_DTO>();
+            },typeof(Startup));
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            #region Repositories
             services.AddScoped<IItemRepository, ItemRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IFactoryRepository, FactoryRepository>();
@@ -51,7 +62,16 @@ namespace Furn_Store
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<ICharachteristics_ItemRepository, Charachteristics_ItemRepository>();
             services.AddScoped<IOrder_Items_Repository, Order_ItemsRepository>();
+            #endregion
+            #region Services
             services.AddTransient<IItemService, ItemService>();
+            services.AddTransient<ICategoryService, CategoryService>();
+            services.AddTransient<IFactoryService, FactoryService>();
+            services.AddTransient<ICharachteristics_Service, Charachteristics_Item_Service>();
+            services.AddTransient<IClientService, ClientService>();
+            services.AddTransient<IOrder_Items_Service, Order_Items_Service>();
+            services.AddTransient<IOrderService, OrderService>();
+            #endregion
             services.AddIdentity<User, IdentityRole>(opt =>
             {
                 opt.Password.RequiredLength = 6;

@@ -17,8 +17,7 @@ namespace Furniture_Store.UnitOfWorkFolder
         IOrderRepository Orders { get; }
         ICharachteristics_ItemRepository Charachteristics_Items { get; }
         IOrder_Items_Repository Order_Items { get; }
-       
-        void Save();
+       void Save();
 
     }
 }

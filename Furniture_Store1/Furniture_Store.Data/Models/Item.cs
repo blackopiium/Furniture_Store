@@ -9,7 +9,7 @@ using Furniture_Store.Data;
 namespace Furniture_Store.Models
 {
     [Table("Item")]
-    public class Item
+    public class Item : IEntity<int>
     {
         public int Id { get; set; }
         public string Name { get; set; }

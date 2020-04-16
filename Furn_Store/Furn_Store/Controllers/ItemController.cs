@@ -1,4 +1,6 @@
-﻿using Furniture_Store.Data.EFCore;
+﻿using Furniture_Store.Business.DTO;
+using Furniture_Store.Business.Interfaces;
+using Furniture_Store.Data.EFCore;
 using Furniture_Store.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,10 +12,10 @@ namespace Furniture_Store.Controllers
 {
     public class ItemController : Controller
     {
-        private readonly IItemRepository _repository;
-        public ItemController(IItemRepository repository)
+        IItemService _service;
+        public ItemController(IItemService service)
         {
-            _repository = repository;
+            _service = service;
         }
 
         [HttpGet]
@@ -22,100 +24,63 @@ namespace Furniture_Store.Controllers
         {
             try
             {
-                var categories = await _repository.GetAll();
-                if (categories == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(categories);
+                return Ok(await _service.GetAllItems());
             }
-            catch (Exception)
+            catch
             {
-                return BadRequest();
+                return StatusCode(404);
             }
-
         }
         [HttpGet]
         [Route("item/{Id}")]
         public async Task<IActionResult> GetCategoryById(int id)
         {
-            if (id == null)
-            {
-                return BadRequest();
-            }
-
             try
             {
-                var category = await _repository.GetById(id);
-
-                if (category == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(category);
+                return Ok(await _service.GetItem(id));
             }
-            catch (Exception)
+            catch
             {
-                return BadRequest();
+                return StatusCode(404);
             }
         }
         [HttpPost]
         [Route("Item")]
-        public async Task<IActionResult> AddCategory([FromBody] Item model)
+        public async Task<IActionResult> AddCategory([FromBody] ItemDTO model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    await _repository.Add(model);
-                    return Ok();
-                }
-                catch (Exception ex)
-                {
-                    if (ex.GetType().FullName == "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException")
-                    {
-                        return NotFound();
-                    }
-                }
+                await _service.AddItem(model);
+                return StatusCode(201);
             }
-            return BadRequest();
+            catch
+            {
+                return StatusCode(400);
+            }
         }
         [HttpDelete]
         [Route("DeleteItem")]
-        public async Task<IActionResult> DeleteCategory([FromBody]Item model)
+        public async Task<IActionResult> DeleteCategory(int id)
         {
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    await _repository.Remove(model);
-
-                    return Ok();
-                }
-                catch (Exception ex)
-                {
-                    if (ex.GetType().FullName == "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException")
-                    {
-                        return NotFound();
-                    }
-
-                    return BadRequest();
-                }
+                await _service.DeleteItem(id);
+                return StatusCode(204);
             }
-
-            return BadRequest();
+            catch
+            {
+                return StatusCode(404);
+            }
         }
         [HttpPost]
         [Route("updateItem")]
-        public async Task<IActionResult> UpdateCategory([FromBody]Item model)
+        public async Task<IActionResult> UpdateCategory([FromBody]ItemDTO model)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await _repository.Update(model);
+                    await _service.UpdateItem(model);
 
                     return Ok();
                 }

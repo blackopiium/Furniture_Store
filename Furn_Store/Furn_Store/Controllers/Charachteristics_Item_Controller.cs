@@ -1,4 +1,6 @@
-﻿using Furniture_Store.Data.Interfaces;
+﻿using Furniture_Store.Business.DTO;
+using Furniture_Store.Business.Interfaces;
+using Furniture_Store.Data.Interfaces;
 using Furniture_Store.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,124 +12,78 @@ namespace Furniture_Store.Controllers
 {
     public class Charachteristics_Item_Controller : Controller
     {
-        private readonly ICharachteristics_ItemRepository _repository;
-        public Charachteristics_Item_Controller(ICharachteristics_ItemRepository repository)
+       private readonly ICharachteristics_Service _service;
+        public Charachteristics_Item_Controller(ICharachteristics_Service service)
         {
-            _repository = repository;
+            _service = service;
         }
         [HttpGet]
         [Route("Charachteristics_Item")]
-        public async Task<IActionResult> GetCategories()
+        public async Task<IActionResult> GetCharc()
         {
             try
             {
-                var categories = await _repository.GetAll();
-                if (categories == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(categories);
+                return Ok(await _service.GetAllCharc());
             }
-            catch (Exception)
+            catch
             {
-                return BadRequest();
+                return StatusCode(404);
             }
 
         }
         [HttpGet]
         [Route("Charachteristics_Item/{Id}")]
-        public async Task<IActionResult> GetCategoryById(int id)
+        public async Task<IActionResult> GetCharcById(int id)
         {
-            if (id == null)
-            {
-                return BadRequest();
-            }
-
             try
             {
-                var category = await _repository.GetById(id);
-
-                if (category == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(category);
+                return Ok(await _service.GetCharc(id));
             }
-            catch (Exception)
+            catch
             {
-                return BadRequest();
+                return StatusCode(404);
             }
         }
         [HttpPost]
         [Route("Charachteristics_Item")]
-        public async Task<IActionResult> AddCategory([FromBody] Charachteristics_Item model)
+        public async Task<IActionResult> AddCharc([FromBody] Charachteristic_Item_DTO model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    await _repository.Add(model);
-                    return Ok();
-                }
-                catch (Exception ex)
-                {
-                    if (ex.GetType().FullName == "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException")
-                    {
-                        return NotFound();
-                    }
-                }
+                await _service.AddCharc(model);
+                return StatusCode(201);
             }
-            return BadRequest();
+            catch
+            {
+                return StatusCode(400);
+            }
         }
         [HttpDelete]
         [Route("Charachteristics_Item/{Id}")]
-        public async Task<IActionResult> DeleteCategory([FromBody]Charachteristics_Item model)
+        public async Task<IActionResult> DeleteCharc(int id)
         {
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    await _repository.Remove(model);
-
-                    return Ok();
-                }
-                catch (Exception ex)
-                {
-                    if (ex.GetType().FullName == "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException")
-                    {
-                        return NotFound();
-                    }
-
-                    return BadRequest();
-                }
+                await _service.DeleteCharc(id);
+                return StatusCode(204);
             }
-
-            return BadRequest();
+            catch
+            {
+                return StatusCode(404);
+            }
         }
-        public async Task<IActionResult> UpdateCategory([FromBody]Charachteristics_Item model)
+        public async Task<IActionResult> UpdateCharc([FromBody]Charachteristic_Item_DTO model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    await _repository.Update(model);
-
-                    return Ok();
-                }
-                catch (Exception ex)
-                {
-                    if (ex.GetType().FullName == "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException")
-                    {
-                        return NotFound();
-                    }
-
-                    return BadRequest();
-                }
+                await _service.UpdateCharc(model);
+                return StatusCode(204);
             }
-
-            return BadRequest();
+            catch
+            {
+                return StatusCode(404);
+            }
         }
     }
 }
+

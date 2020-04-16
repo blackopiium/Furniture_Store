@@ -6,12 +6,12 @@ using Furniture_Store.Data;
 
 namespace Furniture_Store.Data
 {
-    public interface IRepository<T> where T : class
+    public interface IRepository<T, TId> where T : class, IEntity<TId>
     {
-        Task<T> GetById(int id);
-        Task Add(T entity);
+        Task<T> GetById(TId id);
+        Task<int> Add(T entity);
         Task Update(T entity);
-        Task Remove(T entity);
+        Task Remove(TId id);
 
         Task<IEnumerable<T>> GetAll();
     }

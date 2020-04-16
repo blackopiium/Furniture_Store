@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Furniture_Store.Data.EFCore
 {
-    public interface IFactoryRepository : IRepository<Factory>
+    public interface IFactoryRepository : IRepository<Factory, int>
     {
      
     }

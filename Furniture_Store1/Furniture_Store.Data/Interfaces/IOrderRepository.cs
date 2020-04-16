@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Furniture_Store.Interfaces
 {
-    public interface IOrderRepository :  IRepository<Order>
+    public interface IOrderRepository :  IRepository<Order, int>
     {
     }
 }

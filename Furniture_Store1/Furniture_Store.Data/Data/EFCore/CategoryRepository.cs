@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Furniture_Store.Data.EFCore
 {
-    public class CategoryRepository : GenericRepository<Category>, ICategoryRepository
+    public class CategoryRepository : GenericRepository<Category, int>, ICategoryRepository
     {
         private readonly RepositoryContext _repositoryContext;
         public CategoryRepository(RepositoryContext context)

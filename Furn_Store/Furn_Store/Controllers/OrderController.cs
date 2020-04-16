@@ -1,4 +1,6 @@
-﻿using Furniture_Store.Interfaces;
+﻿using Furniture_Store.Business.DTO;
+using Furniture_Store.Business.Interfaces;
+using Furniture_Store.Interfaces;
 using Furniture_Store.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,125 +12,77 @@ namespace Furniture_Store.Controllers
 {
     public class OrderController : Controller
     {
-        private readonly IOrderRepository _repository;
-        public OrderController(IOrderRepository repository)
+        private readonly IOrderService _service;
+        public OrderController(IOrderService service)
         {
-            _repository = repository;
+            _service = service;
         }
         [HttpGet]
         [Route("Order")]
-        public async Task<IActionResult> GetCategories()
+        public async Task<IActionResult> GetOrders()
         {
             try
             {
-                var categories = await _repository.GetAll();
-                if (categories == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(categories);
+                return Ok(await _service.GetAllOrders());
             }
-            catch (Exception)
+            catch
             {
-                return BadRequest();
+                return StatusCode(404);
             }
-
         }
         [HttpGet]
         [Route("order/{Id}")]
-        public async Task<IActionResult> GetCategoryById(int id)
+        public async Task<IActionResult> GetOrderById(int id)
         {
-            if (id == null)
-            {
-                return BadRequest();
-            }
-
             try
             {
-                var category = await _repository.GetById(id);
-
-                if (category == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(category);
+                return Ok(await _service.GetOrder(id));
             }
-            catch (Exception)
+            catch
             {
-                return BadRequest();
+                return StatusCode(404);
             }
         }
         [HttpPost]
         [Route("Order")]
-        public async Task<IActionResult> AddCategory([FromBody] Order model)
+        public async Task<IActionResult> AddOrder([FromBody] OrderDTO model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    await _repository.Add(model);
-                    return Ok();
-                }
-                catch (Exception ex)
-                {
-                    if (ex.GetType().FullName == "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException")
-                    {
-                        return NotFound();
-                    }
-                }
+                await _service.AddOrder(model);
+                return StatusCode(201);
             }
-            return BadRequest();
+            catch
+            {
+                return StatusCode(400);
+            }
         }
         [HttpDelete]
         [Route("order/{Id}")]
-        public async Task<IActionResult> DeleteCategory([FromBody]Order model)
+        public async Task<IActionResult> DeleteOrder(int id)
         {
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    await _repository.Remove(model);
-
-                    return Ok();
-                }
-                catch (Exception ex)
-                {
-                    if (ex.GetType().FullName == "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException")
-                    {
-                        return NotFound();
-                    }
-
-                    return BadRequest();
-                }
+                await _service.DeleteOrder(id);
+                return StatusCode(204);
             }
-
-            return BadRequest();
+            catch
+            {
+                return StatusCode(404);
+            }
         }
         [HttpPost]
-        public async Task<IActionResult> UpdateCategory([FromBody]Order model)
+        public async Task<IActionResult> UpdateOrder([FromBody]OrderDTO model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    await _repository.Update(model);
-
-                    return Ok();
-                }
-                catch (Exception ex)
-                {
-                    if (ex.GetType().FullName == "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException")
-                    {
-                        return NotFound();
-                    }
-
-                    return BadRequest();
-                }
+                await _service.UpdateOrder(model);
+                return StatusCode(204);
             }
-
-            return BadRequest();
+            catch
+            {
+                return StatusCode(404);
+            }
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Furniture_Store.Controllers
 {
     public class AccountController : Controller
     {
-       /* private readonly IMapper _mapper;*/
+        private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
@@ -32,12 +32,11 @@ namespace Furniture_Store.Controllers
             {
                 User user = new User
                 {
-                   /*FirstName=registerModel.FirstName, 
-                    LastName=registerModel.LastName,*/
-                    Email = registerModel.Email, 
+                   
+                    Email = registerModel.Email,
                     UserName = registerModel.Email
                 };
-                 
+
                 var result = await _userManager.CreateAsync(user, registerModel.Password);
                 if (result.Succeeded)
                 {
@@ -55,4 +54,5 @@ namespace Furniture_Store.Controllers
             return View(registerModel);
         }
     }
+
 }

@@ -5,46 +5,48 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Furniture_Store.Data;
 using Furniture_Store.Models;
+using Furniture_Store.Data.Interfaces;
 using Furniture_Store.UnitOfWorkFolder;
 
 namespace Furniture_Store.Data.EFCore
 {
-    public class GenericRepository<T> : IRepository<T> where T : class
+    public class GenericRepository<T, TId> : IRepository<T, TId> where T : class, IEntity<TId>
     {
-        private readonly RepositoryContext _context;
-        public GenericRepository()
-        {
-            
-        }
+        protected RepositoryContext _context;
+        protected DbSet<T> _dbSet;
         public GenericRepository(RepositoryContext context)
         {
             _context = context;
+            _dbSet = _context.Set<T>();
             
         }
-        public async Task Add(T entity)
+        public async Task<int> Add(T entity)
         {
-            // await Context.AddAsync(entity);
-            await _context.Set<T>().AddAsync(entity);
+            
+            _dbSet.Add(entity);
             await _context.SaveChangesAsync();
+            return 1;
         }
-        public Task Update(T entity)
+        public async Task Update(T entity)
         {
             // In case AsNoTracking is used
             _context.Entry(entity).State = EntityState.Modified;
-            return _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
-        public Task Remove(T entity)
+        public async Task Remove(TId id)
         {
-            _context.Set<T>().Remove(entity);
-            return _context.SaveChangesAsync();
+            T x = await _dbSet.FindAsync(id);
+            _dbSet.Remove(x);
+            await _context.SaveChangesAsync();
+           
         }
         public async Task<IEnumerable<T>> GetAll()
         {
-            return await _context.Set<T>().ToListAsync();
+            return await _dbSet.ToListAsync();
         }
-       public async Task<T> GetById(int id)
+       public async Task<T> GetById(TId id)
         {
-            return await _context.Set<T>().FindAsync(id);
+            return await _dbSet.FindAsync(id);
         }
     }
 }

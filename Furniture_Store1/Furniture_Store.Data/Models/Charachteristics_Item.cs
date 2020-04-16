@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Furniture_Store.Data;
+
 namespace Furniture_Store.Models
 {
     [Table("Charachteristics_Item")]
-    public class Charachteristics_Item
+    public class Charachteristics_Item: IEntity<int>
     {
         public int Id { get; set; }
         public int ItemId { get; set; }

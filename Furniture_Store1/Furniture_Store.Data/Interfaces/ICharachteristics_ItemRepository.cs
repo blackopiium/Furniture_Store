@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Furniture_Store.Data.Interfaces
 {
-    public interface ICharachteristics_ItemRepository : IRepository<Charachteristics_Item>
+    public interface ICharachteristics_ItemRepository : IRepository<Charachteristics_Item, int>
     {
     }
 }

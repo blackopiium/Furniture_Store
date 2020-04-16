@@ -1,4 +1,6 @@
-﻿using Furniture_Store.Data.EFCore;
+﻿using Furniture_Store.Business.DTO;
+using Furniture_Store.Business.Interfaces;
+using Furniture_Store.Data.EFCore;
 using Furniture_Store.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,10 +12,10 @@ namespace Furniture_Store.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly ICategoryRepository _repository;
-        public CategoryController(ICategoryRepository repository)
+        ICategoryService _service;
+        public CategoryController(ICategoryService service)
         {
-            _repository = repository;
+            _service = service;
         }
         [HttpGet]
         [Route("Category")]
@@ -21,17 +23,11 @@ namespace Furniture_Store.Controllers
         {
             try
             {
-                var categories = await _repository.GetAll();
-                if (categories == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(categories);
+                return Ok(await _service.GetAllCategories());
             }
-            catch (Exception)
+            catch
             {
-                return BadRequest();
+                return StatusCode(404);
             }
 
         }
@@ -39,96 +35,55 @@ namespace Furniture_Store.Controllers
         [Route("Category/{Id}")]
         public async Task<IActionResult> GetCategoryById(int id)
         {
-            if (id == null)
-            {
-                return BadRequest();
-            }
-
             try
             {
-                var category= await _repository.GetById(id);
-
-                if (category == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(category);
+                return Ok(await _service.GetCategory(id));
             }
-            catch (Exception)
+            catch
             {
-                return BadRequest();
+                return StatusCode(404);
             }
         }
         [HttpPost]
         [Route("Category")]
-        public async Task<IActionResult> AddCategory([FromBody] Category model)
+        public async Task<IActionResult> AddCategory([FromBody] CategoryDTO model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    await _repository.Add(model);
-                    return Ok();
-                }
-                catch (Exception ex)
-                {
-                    if (ex.GetType().FullName== "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException")
-                    {
-                        return NotFound();
-                    }
-                }
+                await _service.AddCategory(model);
+                return StatusCode(201);
             }
-            return BadRequest();
+            catch
+            {
+                return StatusCode(400);
+            }
         }
         [HttpDelete]
         [Route("Category/{Id}")]
-        public async Task<IActionResult> DeleteCategory([FromBody]Category model)
+        public async Task<IActionResult> DeleteCategory(int id)
         {
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    await _repository.Remove(model);
-
-                    return Ok();
-                }
-                catch (Exception ex)
-                {
-                    if (ex.GetType().FullName == "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException")
-                    {
-                        return NotFound();
-                    }
-
-                    return BadRequest();
-                }
+                await _service.DeleteCategory(id);
+                return StatusCode(204);
             }
-
-            return BadRequest();
+            catch
+            {
+                return StatusCode(404);
+            }
         }
         [HttpPost]
-        public async Task<IActionResult> UpdateCategory([FromBody]Category model)
+        public async Task<IActionResult> UpdateCategory([FromBody]CategoryDTO model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    await _repository.Update(model);
-
-                    return Ok();
-                }
-                catch (Exception ex)
-                {
-                    if (ex.GetType().FullName == "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException")
-                    {
-                        return NotFound();
-                    }
-
-                    return BadRequest();
-                }
+                await _service.UpdateCategory(model);
+                return StatusCode(204);
             }
-
-            return BadRequest();
+            catch
+            {
+                return StatusCode(404);
+            }
         }
     }
 }

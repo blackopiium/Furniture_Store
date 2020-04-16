@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Furniture_Store.Data.Data.EFCore
 {
-    public class Order_ItemsRepository : GenericRepository<Order_Items>, IOrder_Items_Repository
+    public class Order_ItemsRepository : GenericRepository<Order_Items, int>, IOrder_Items_Repository
     {
         private readonly RepositoryContext _repositoryContext;
         public Order_ItemsRepository(RepositoryContext context)
