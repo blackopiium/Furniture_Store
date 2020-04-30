@@ -1,4 +1,6 @@
 ﻿using Furniture_Store.Business.DTO;
+using Furniture_Store.Data.Helpers;
+using Furniture_Store.Data.Parameters;
 using Furniture_Store.Models;
 using System;
 using System.Collections.Generic;
@@ -14,6 +16,7 @@ namespace Furniture_Store.Business.Interfaces
         Task UpdateItem(ItemDTO item);
         Task<int> AddItem(ItemDTO item);
         Task DeleteItem(int id);
+        Task<PagedList<ItemDTO>> GetItemPagesFiltered(ItemParameters parameters);
         void Dispose();
     }
 }

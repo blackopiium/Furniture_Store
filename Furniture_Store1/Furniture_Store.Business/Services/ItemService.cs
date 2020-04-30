@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Furniture_Store.Business.DTO;
 using Furniture_Store.Business.Interfaces;
+using Furniture_Store.Data.Helpers;
+using Furniture_Store.Data.Parameters;
 using Furniture_Store.Models;
 using Furniture_Store.UnitOfWorkFolder;
 using System;
@@ -48,6 +50,12 @@ namespace Furniture_Store.Business.Services
         public async Task DeleteItem(int id)
         {
             await _uow.Items.Remove(id);
+        }
+        public async Task<PagedList<ItemDTO>> GetItemPagesFiltered(ItemParameters parameters)
+        {
+            var x = await _uow.Items.GetAllPagesFiltered(parameters);
+            var result = _mapper.Map<PagedList<ItemDTO>>(x);
+            return result;
         }
         public void Dispose()
         {

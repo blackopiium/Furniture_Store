@@ -10,6 +10,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Furniture_Store.WEB.Data;
+using Furniture_Store.WEB.Services;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server;
 
 namespace Furniture_Store.WEB
 {
@@ -28,7 +31,12 @@ namespace Furniture_Store.WEB
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
             services.AddSingleton<WeatherForecastService>();
+            services.AddHttpClient<ItemsService>(client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:44392");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,11 +55,13 @@ namespace Furniture_Store.WEB
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });

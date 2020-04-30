@@ -8,5 +8,6 @@ namespace Furniture_Store.Data.Models
     public class User : IdentityUser
     {
 
+
     }
 }

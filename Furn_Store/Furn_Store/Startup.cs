@@ -1,18 +1,24 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using BenchmarkDotNet.Validators;
 using Furniture_Store.Business.DTO;
 using Furniture_Store.Business.Interfaces;
 using Furniture_Store.Business.Services;
+using Furniture_Store.Data;
 using Furniture_Store.Data.Data.EFCore;
 using Furniture_Store.Data.EFCore;
+using Furniture_Store.Data.Helpers;
 using Furniture_Store.Data.Interfaces;
 using Furniture_Store.Data.Models;
 using Furniture_Store.Interfaces;
 using Furniture_Store.Models;
 using Furniture_Store.UnitOfWorkFolder;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -21,11 +27,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Furn_Store
 {
     public class Startup
     {
+        private const string SecretKey = "iNivDmHLpUA223sqsfhqGbMRdRj1PVkH";
+        private readonly SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(SecretKey));
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -79,8 +88,22 @@ namespace Furn_Store
                 opt.Password.RequireUppercase = false;
                 opt.Password.RequireNonAlphanumeric = false;
             })
-                .AddEntityFrameworkStores<RepositoryContext>();
+                .AddEntityFrameworkStores<RepositoryContext>()
+                .AddDefaultTokenProviders();
+
+
+
+            services.AddTransient<ISortHepler<Item>, SortHelper<Item>>();
+
+            // api user claim policy
+            /*services.AddAuthorization(options =>
+            {
+                options.AddPolicy("ApiUser", policy => policy.RequireClaim(Constants.Strings.JwtClaimIdentifiers.Rol, Constants.Strings.JwtClaims.ApiAccess));
+            });*/
+
+            services.AddMvc();
         }
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -97,10 +120,11 @@ namespace Furn_Store
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseCors("CorsPolicy");
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseRouting();
             app.UseAuthentication();
+            app.UseHttpsRedirection();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

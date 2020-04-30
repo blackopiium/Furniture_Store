@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Furniture_Store.Data;
 
@@ -14,5 +15,6 @@ namespace Furniture_Store.Data
         Task Remove(TId id);
 
         Task<IEnumerable<T>> GetAll();
+        IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression);
     }
 }

@@ -7,6 +7,7 @@ using Furniture_Store.Data;
 using Furniture_Store.Models;
 using Furniture_Store.Data.Interfaces;
 using Furniture_Store.UnitOfWorkFolder;
+using System.Linq.Expressions;
 
 namespace Furniture_Store.Data.EFCore
 {
@@ -29,7 +30,6 @@ namespace Furniture_Store.Data.EFCore
         }
         public async Task Update(T entity)
         {
-            // In case AsNoTracking is used
             _context.Entry(entity).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
@@ -47,6 +47,10 @@ namespace Furniture_Store.Data.EFCore
        public async Task<T> GetById(TId id)
         {
             return await _dbSet.FindAsync(id);
+        }
+        public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression)
+        {
+            return _dbSet.Where(expression);
         }
     }
 }

@@ -1,0 +1,41 @@
+﻿@page "/items"
+@inject Furniture_Store.WEB.Services.ItemsService itemService
+@using Furniture_Store.Business.DTO
+<h1>Items</h1>
+@if (items==null)
+{
+<p><em>Loading...</em></p>
+}
+else
+{
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>CategoryId</th>
+            <th>Price</th>
+            <th>FactoryId</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in items)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+                <td>@item.CategoryId</td>
+                <td>@item.Price</td>
+                <td>@item.FactoryId</td>
+            </tr>
+        }
+    </tbody>
+</table>
+}
+@functions{
+    List<ItemDTO> items;
+    protected override async Task OnInitializedAsync()
+    {
+    items = await itemService.GetAllItems();
+    }
+}

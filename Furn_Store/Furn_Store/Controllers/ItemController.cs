@@ -1,6 +1,7 @@
 ﻿using Furniture_Store.Business.DTO;
 using Furniture_Store.Business.Interfaces;
 using Furniture_Store.Data.EFCore;
+using Furniture_Store.Data.Parameters;
 using Furniture_Store.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -19,16 +20,16 @@ namespace Furniture_Store.Controllers
         }
 
         [HttpGet]
-        [Route("Item")]
-        public async Task<IActionResult> GetCategories()
+        [Route("api/Item")]
+        public async Task<IActionResult> GetCategories([FromQuery] ItemParameters parameters)
         {
             try
             {
-                return Ok(await _service.GetAllItems());
+                return Ok(await _service.GetItemPagesFiltered(parameters));
             }
             catch
             {
-                return StatusCode(404);
+                return NotFound();
             }
         }
         [HttpGet]
