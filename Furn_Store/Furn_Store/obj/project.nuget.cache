@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "4Nl6m2CjTgyilFqv4vz6P+jIFgLPHoqx3fHD1r7PacYaN4jAL0BUh5x9LawlC2aVZTyuBjvKxy+XpI1jO5eGPg==",
+  "dgSpecHash": "KDAyivrCz5dQgdqLzSKqJ/kRRl/Hz/DjAYsDa9V3DPwhQXePeqUix+Okkfk19nVbqXqU15hgpz8rz0wnd2ROEg==",
   "success": true,
   "projectFilePath": "C:\\Users\\Admin\\OneDrive\\Документы\\Furniture_Store\\Furn_Store\\Furn_Store\\Furn_Store.csproj",
   "expectedPackageFiles": [
@@ -9,6 +9,7 @@
     "C:\\Users\\Admin\\.nuget\\packages\\benchmarkdotnet\\0.12.1\\benchmarkdotnet.0.12.1.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\benchmarkdotnet.annotations\\0.12.1\\benchmarkdotnet.annotations.0.12.1.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\commandlineparser\\2.4.3\\commandlineparser.2.4.3.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\fluentvalidation\\8.6.2\\fluentvalidation.8.6.2.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\iced\\1.4.0\\iced.1.4.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\3.1.3\\microsoft.aspnetcore.authentication.jwtbearer.3.1.3.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\3.1.3\\microsoft.aspnetcore.cryptography.internal.3.1.3.nupkg.sha512",

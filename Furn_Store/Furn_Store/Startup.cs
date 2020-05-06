@@ -6,9 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using BenchmarkDotNet.Validators;
+using FluentValidation;
 using Furniture_Store.Business.DTO;
 using Furniture_Store.Business.Interfaces;
 using Furniture_Store.Business.Services;
+using Furniture_Store.Business.Validators;
 using Furniture_Store.Data;
 using Furniture_Store.Data.Data.EFCore;
 using Furniture_Store.Data.EFCore;
@@ -52,6 +54,7 @@ namespace Furn_Store
           /*  services.AddDbContext<RepositoryContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("RepositoryContext")));*/
             services.AddMvc();
+            #region automapper
             services.AddAutoMapper(cfg=>
             {
                 cfg.CreateMap<Item, ItemDTO>();
@@ -62,6 +65,7 @@ namespace Furn_Store
                 cfg.CreateMap<Client, ClientDTO>();
                 cfg.CreateMap<Order_Items, Order_Items_DTO>();
             },typeof(Startup));
+            #endregion
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             #region Repositories
             services.AddScoped<IItemRepository, ItemRepository>();
@@ -90,9 +94,15 @@ namespace Furn_Store
             })
                 .AddEntityFrameworkStores<RepositoryContext>()
                 .AddDefaultTokenProviders();
-
-
-
+            #region validators
+            services.AddSingleton<IValidator<ItemDTO>, ItemDTOValidator>();
+            services.AddSingleton<IValidator<CategoryDTO>, CategoryDTOValidator>();
+            services.AddSingleton<IValidator<FactoryDTO>, FactoryDTOValidator>();
+            services.AddSingleton<IValidator<ClientDTO>, ClientDTOValidator>();
+            services.AddSingleton<IValidator<OrderDTO>, OrderDTOValidator>();
+            services.AddSingleton<IValidator<Order_Items_DTO>, Order_Items_DTO_Validator>();
+            services.AddSingleton<IValidator<Charachteristic_Item_DTO>, Charachteristircs_Item_DTO_Validator>();
+            #endregion
             services.AddTransient<ISortHepler<Item>, SortHelper<Item>>();
 
             // api user claim policy

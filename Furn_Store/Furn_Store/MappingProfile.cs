@@ -14,7 +14,14 @@ namespace Furniture_Store
     {
         public MappingProfile()
         { 
-            CreateMap<ItemDTO, Item>();
+            CreateMap<Item, ItemDTO>().ReverseMap();
+            CreateMap<Category, CategoryDTO>().ReverseMap();
+            CreateMap<Factory, FactoryDTO>().ReverseMap();
+            CreateMap<Client, ClientDTO>().ReverseMap();
+            CreateMap<Order, OrderDTO>().ReverseMap();
+            CreateMap<Order_Items, Order_Items_DTO>().ReverseMap();
+            CreateMap<Charachteristics_Item, Charachteristic_Item_DTO>().ReverseMap();
+            
         }
     }
 }

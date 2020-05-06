@@ -215,3 +215,4 @@ C:\Users\Admin\OneDrive\Документы\Furniture_Store\Furn_Store\Furn_Store
 C:\Users\Admin\OneDrive\Документы\Furniture_Store\Furn_Store\Furn_Store\obj\Debug\netcoreapp3.1\Furn_Store.genruntimeconfig.cache
 C:\Users\Admin\OneDrive\Документы\Furniture_Store\Furn_Store\Furn_Store\bin\Debug\netcoreapp3.1\System.Linq.Dynamic.dll
 C:\Users\Admin\OneDrive\Документы\Furniture_Store\Furn_Store\Furn_Store\bin\Debug\netcoreapp3.1\System.Linq.Dynamic.Core.dll
+C:\Users\Admin\OneDrive\Документы\Furniture_Store\Furn_Store\Furn_Store\bin\Debug\netcoreapp3.1\FluentValidation.dll

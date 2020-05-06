@@ -53,6 +53,10 @@
               "target": "Package",
               "version": "[7.0.0, )"
             },
+            "FluentValidation": {
+              "target": "Package",
+              "version": "[8.6.2, )"
+            },
             "System.IdentityModel.Tokens.Jwt": {
               "target": "Package",
               "version": "[6.5.0, )"

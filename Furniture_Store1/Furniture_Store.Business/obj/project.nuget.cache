@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "BPfMUzzC/eR7wf4vFd4hLjoDFNUmmbtnBfjgIzaw0mvdEpQ5cjTsYdO42l1aA0V5QuXLPK1tfaucDkp36P1BEw==",
+  "dgSpecHash": "4lE+lvxw2LnBBi+zot/9j5TeE0lwJKDhzgDwZRXnOkFgewGOxFYbjW/KOR5idOxk8gMaYoxO+WaGIV5lKuA+sw==",
   "success": true,
   "projectFilePath": "C:\\Users\\Admin\\OneDrive\\Документы\\Furniture_Store\\Furniture_Store1\\Furniture_Store.Business\\Furniture_Store.Business.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Admin\\.nuget\\packages\\automapper\\9.0.0\\automapper.9.0.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\7.0.0\\automapper.extensions.microsoft.dependencyinjection.7.0.0.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\fluentvalidation\\8.6.2\\fluentvalidation.8.6.2.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\3.1.3\\microsoft.aspnetcore.cryptography.internal.3.1.3.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.aspnetcore.cryptography.keyderivation\\3.1.3\\microsoft.aspnetcore.cryptography.keyderivation.3.1.3.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.aspnetcore.identity.entityframeworkcore\\3.1.3\\microsoft.aspnetcore.identity.entityframeworkcore.3.1.3.nupkg.sha512",

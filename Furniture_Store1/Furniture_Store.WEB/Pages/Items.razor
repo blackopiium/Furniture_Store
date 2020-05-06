@@ -1,41 +1,52 @@
 ﻿@page "/items"
-@inject Furniture_Store.WEB.Services.ItemsService itemService
+@using System.Net.Http
+@inject HttpClient Http
+@using Microsoft.Extensions.Logging
 @using Furniture_Store.Business.DTO
 <h1>Items</h1>
-@if (items==null)
+@if (items == null)
 {
-<p><em>Loading...</em></p>
+    <p><em>Loading...</em></p>
 }
 else
 {
-<table class="table">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>CategoryId</th>
-            <th>Price</th>
-            <th>FactoryId</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in items)
-        {
+    <table class="table">
+        <thead>
             <tr>
-                <td>@item.Id</td>
-                <td>@item.Name</td>
-                <td>@item.CategoryId</td>
-                <td>@item.Price</td>
-                <td>@item.FactoryId</td>
+                <th>Id</th>
+                <th>Name</th>
+                <th>CategoryId</th>
+                <th>Price</th>
+                <th>FactoryId</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in items)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Name</td>
+                    <td>@item.CategoryId</td>
+                    <td>@item.Price</td>
+                    <td>@item.FactoryId</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
-@functions{
-    List<ItemDTO> items;
+@code{
+
+    private ItemDTO[] items;
+    ItemDTO obj = new ItemDTO();
+    string ids = "0";
+    bool showAddrow = false;
+
+    bool loadFailed;
+
     protected override async Task OnInitializedAsync()
     {
-    items = await itemService.GetAllItems();
+        ids = "0";
+        items = await Http.GetJsonAsync<ItemDTO[]>("/api/Item/");
     }
+
 }

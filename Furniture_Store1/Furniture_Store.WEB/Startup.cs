@@ -13,6 +13,8 @@ using Furniture_Store.WEB.Data;
 using Furniture_Store.WEB.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
+using Microsoft.AspNetCore.ResponseCompression;
+using System.Net.Http;
 
 namespace Furniture_Store.WEB
 {
@@ -33,10 +35,31 @@ namespace Furniture_Store.WEB
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
             services.AddSingleton<WeatherForecastService>();
-            services.AddHttpClient<ItemsService>(client =>
+            /*services.AddSingleton<ItemsService>();*/
+           /* services.AddHttpClient<ItemsService>(client =>
             {
                 client.BaseAddress = new Uri("https://localhost:44392");
+            });*/
+            services.AddResponseCompression(opts =>
+            {
+                opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+                    new[] { "application/octet-stream" });
             });
+
+            // Server Side Blazor doesn't register HttpClient by default
+            if (!services.Any(x => x.ServiceType == typeof(HttpClient)))
+            {
+                // Setup HttpClient for server side in a client side compatible fashion
+                services.AddScoped<HttpClient>(s =>
+                {
+                    // Creating the URI helper needs to wait until the JS Runtime is initialized, so defer it.      
+                    var uriHelper = s.GetRequiredService<NavigationManager>();
+                    return new HttpClient
+                    {
+                        BaseAddress = new Uri(uriHelper.BaseUri)
+                    };
+                });
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
