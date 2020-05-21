@@ -9,12 +9,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Furniture_Store.Models
 {
-    public class RepositoryContext : IdentityDbContext<User>
+    public class RepositoryContext : IdentityDbContext<MyUser, MyRole, int>
     {
+        //public RepositoryContext(DbContextOptions options) : base(options)
+        //{
+
+        //}
         public RepositoryContext()
         {
         }
-
         public RepositoryContext(DbContextOptions options)
             : base(options)
         {
@@ -27,7 +30,6 @@ namespace Furniture_Store.Models
         public DbSet<Client> Clients { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Order_Items> Order_Items { get; set; }
-        public override DbSet<User> Users { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

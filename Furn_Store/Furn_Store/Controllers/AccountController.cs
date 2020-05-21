@@ -12,88 +12,56 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
+using Furniture_Store.Business.Interfaces;
+using Furniture_Store.Business.DTO.Identity;
 
 namespace Furniture_Store.Controllers
 {
-    public class AccountController : Controller
-    {
-        /*private readonly IMapper _mapper;*/
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
-        private readonly IConfiguration _configuration;
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration configuration)
+
+        [Authorize(AuthenticationSchemes = "Bearer")]
+        [Route("api/[controller]")]
+        public class AccountController : Controller
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _configuration = configuration;
-        }
-        [HttpGet]
-        public IActionResult Register()
-        {
-            return View();
-        }
-        /*[HttpPost("authenticate")]
-        public async Task<object> Login([FromBody] UserLoginModel userLoginModel)
-        {
-            var result = await _signInManager.PasswordSignInAsync(userLoginModel.Email, userLoginModel.Password, false, false);
-            if (result.Succeeded)
+        private readonly IAccountService _service;
+            public AccountController(IAccountService accountService)
             {
-                var appUser = _userManager.Users.SingleOrDefault(r => r.Email == userLoginModel.Email);
-                return await GenerateJwtToken(userLoginModel.Email, appUser);
+                _service = accountService;
             }
-            throw new ApplicationException("Invalid_Login_Attempt");
-        }*/
-        [HttpPost]
-        public async Task<IActionResult> Register([FromBody]RegisterViewModel registerModel)
-        {
-            if (ModelState.IsValid)
-            {
-                User user = new User
-                {
-                   
-                    Email = registerModel.Email,
-                    UserName = registerModel.Email
-                };
 
-                var result = await _userManager.CreateAsync(user, registerModel.Password);
-                if (result.Succeeded)
-                {
-                    await _signInManager.SignInAsync(user, false);
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error.Description);
-                    }
-                }
+            [HttpPost]
+            [AllowAnonymous]
+            [Route("register")]
+            public async Task<IActionResult> Register([FromBody]RegisterDTO myUser)
+            {
+                return Ok(await _service.Register(myUser));
             }
-            return View(registerModel);
-        }
-        private async Task<object> GenerateJwtToken(string email, User user)
-        {
-            var claims = new List<Claim>
+
+            [HttpGet]
+            [AllowAnonymous]
+            [Route("Login")]
+            public async Task<IActionResult> Login([FromBody]LoginDTO myUser)
             {
-                new Claim(JwtRegisteredClaimNames.Sub, email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.NameIdentifier, user.Id)
-            };
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtKey"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expires = DateTime.Now.AddDays(Convert.ToDouble(_configuration["JwtExpireDays"]));
-
-            var token = new JwtSecurityToken(
-                _configuration["JwtIssuer"],
-                _configuration["JwtIssuer"],
-                claims,
-                expires: expires,
-                signingCredentials: creds
-            );
-
-            return  new JwtSecurityTokenHandler().WriteToken(token);
+                return Ok(await _service.Login(myUser));
+            }
+            [HttpGet]
+            [Route("Exit")]
+            public async Task<IActionResult> Exit()
+            {
+                return Ok(await _service.Exit());
+            }
+            [HttpGet]
+            [Route("Create")]
+            public async Task<IActionResult> Create([FromBody]MyUserDTO myUser)
+            {
+                return Ok(await _service.Create(myUser));
+            }
+            
+            [HttpGet]
+            public async Task<IActionResult> List()
+            {
+                return Ok(await _service.List());
+            }
         }
-    }
 
 }

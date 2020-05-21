@@ -3,9 +3,11 @@ using Furniture_Store.Data.Data.EFCore;
 using Furniture_Store.Data.EFCore;
 using Furniture_Store.Data.Helpers;
 using Furniture_Store.Data.Interfaces;
+using Furniture_Store.Data.Models;
 using Furniture_Store.Interfaces;
 using Furniture_Store.Models;
 using Furniture_Store.UnitOfWorkFolder;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,16 +25,22 @@ namespace Furniture_Store.UnitOfWorkFolder
         private readonly ICharachteristics_ItemRepository _charach;
         private readonly IOrderRepository _orders;
         private readonly IOrder_Items_Repository _ord_it;
+        private readonly UserManager<MyUser> _userManager;
+        private readonly SignInManager<MyUser> _signInManager;
+        private readonly RoleManager<MyRole> _roleManager;
         private readonly ISortHepler<Item> _itemSortHepler;
         public UnitOfWork(
-            RepositoryContext context, 
+            RepositoryContext context,
             IItemRepository item,
             ICategoryRepository category,
             IFactoryRepository factory,
             IClientRepository client,
-            ICharachteristics_ItemRepository charach, 
+            ICharachteristics_ItemRepository charach,
             IOrderRepository orders,
-            IOrder_Items_Repository ord_it, 
+            IOrder_Items_Repository ord_it,
+             UserManager<MyUser> userManager,
+            SignInManager<MyUser> signInManager,
+            RoleManager<MyRole> roleManager,
             ISortHepler<Item> itemSortHelper)
         {
             _context = context;
@@ -94,14 +102,50 @@ namespace Furniture_Store.UnitOfWorkFolder
                 return _charach;
             }
         }
-
-      public void Save()
+        public UserManager<MyUser> userManager
         {
-            _context.SaveChanges();
+            get
+            {
+                return _userManager;
+            }
+        }
+        public RoleManager<MyRole> roleManager
+        {
+            get
+            {
+                return _roleManager;
+            }
+        }
+
+        public SignInManager<MyUser> signInManager
+        {
+            get
+            {
+                return _signInManager;
+            }
+        }
+
+        public void Save()
+        {
+            _context.SaveChangesAsync();
+        }
+        private bool disposed = false;
+        public virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    _context.Dispose();
+                }
+                this.disposed = true;
+            }
         }
         public void Dispose()
         {
-            _context.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }
+

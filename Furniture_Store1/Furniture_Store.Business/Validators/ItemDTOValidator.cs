@@ -19,7 +19,7 @@ namespace Furniture_Store.Business.Validators
             .MaximumLength(30);
             RuleFor(x => x.Price)
                 .NotEmpty()
-                .GreaterThanOrEqualTo(0);
+                .GreaterThan(0);
 
 
         }

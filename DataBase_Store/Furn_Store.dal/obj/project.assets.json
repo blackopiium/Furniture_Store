@@ -837,11 +837,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Admin\\OneDrive\\Документы\\study\\2 курс\\ооп\\KURSOVA\\DataBase_Store\\Furn_Store.dal\\Furnit.csproj",
+      "projectUniqueName": "C:\\Users\\Admin\\OneDrive\\Документы\\Furniture_Store\\DataBase_Store\\Furn_Store.dal\\Furnit.csproj",
       "projectName": "Furnit",
-      "projectPath": "C:\\Users\\Admin\\OneDrive\\Документы\\study\\2 курс\\ооп\\KURSOVA\\DataBase_Store\\Furn_Store.dal\\Furnit.csproj",
+      "projectPath": "C:\\Users\\Admin\\OneDrive\\Документы\\Furniture_Store\\DataBase_Store\\Furn_Store.dal\\Furnit.csproj",
       "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Admin\\OneDrive\\Документы\\study\\2 курс\\ооп\\KURSOVA\\DataBase_Store\\Furn_Store.dal\\obj\\",
+      "outputPath": "C:\\Users\\Admin\\OneDrive\\Документы\\Furniture_Store\\DataBase_Store\\Furn_Store.dal\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -899,7 +899,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.101\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.201\\RuntimeIdentifierGraph.json"
       }
     }
   }

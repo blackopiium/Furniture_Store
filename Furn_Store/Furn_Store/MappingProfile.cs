@@ -7,6 +7,7 @@ using Furniture_Store.Data.Models;
 using Furn_Store.ViewModels;
 using Furniture_Store.Business.DTO;
 using Furniture_Store.Models;
+using Furniture_Store.Business.DTO.Identity;
 
 namespace Furniture_Store
 {
@@ -21,6 +22,7 @@ namespace Furniture_Store
             CreateMap<Order, OrderDTO>().ReverseMap();
             CreateMap<Order_Items, Order_Items_DTO>().ReverseMap();
             CreateMap<Charachteristics_Item, Charachteristic_Item_DTO>().ReverseMap();
+            CreateMap<MyRole, MyRoleDTO>().ReverseMap();
             
         }
     }

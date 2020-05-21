@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace Furniture_Store.Controllers
 {
+    [Route("api/[controller]")]
     public class ItemController : Controller
     {
         IItemService _service;
@@ -20,20 +21,23 @@ namespace Furniture_Store.Controllers
         }
 
         [HttpGet]
-        [Route("api/Item")]
-        public async Task<IActionResult> GetCategories([FromQuery] ItemParameters parameters)
+        public async Task<IActionResult> GetCategories(/*[FromQuery]ItemParameters parameters*/)
         {
             try
             {
-                return Ok(await _service.GetItemPagesFiltered(parameters));
+                var items = await _service.GetAllItems();
+                if (items != null)
+                    return Ok(items);
+                else
+                    return NotFound();
             }
             catch
             {
                 return NotFound();
             }
         }
-        [HttpGet]
-        [Route("item/{Id}")]
+
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetCategoryById(int id)
         {
             try
@@ -46,7 +50,7 @@ namespace Furniture_Store.Controllers
             }
         }
         [HttpPost]
-        [Route("Item")]
+       
         public async Task<IActionResult> AddCategory([FromBody] ItemDTO model)
         {
             try
@@ -60,7 +64,7 @@ namespace Furniture_Store.Controllers
             }
         }
         [HttpDelete]
-        [Route("DeleteItem")]
+        
         public async Task<IActionResult> DeleteCategory(int id)
         {
             try
@@ -74,7 +78,7 @@ namespace Furniture_Store.Controllers
             }
         }
         [HttpPost]
-        [Route("updateItem")]
+       
         public async Task<IActionResult> UpdateCategory([FromBody]ItemDTO model)
         {
             if (ModelState.IsValid)

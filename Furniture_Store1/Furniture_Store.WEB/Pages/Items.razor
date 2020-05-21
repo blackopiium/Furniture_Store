@@ -1,12 +1,11 @@
 ﻿@page "/items"
-@using System.Net.Http
-@inject HttpClient Http
-@using Microsoft.Extensions.Logging
-@using Furniture_Store.Business.DTO
+@page "/items/{id}"
+@inject Services.ItemsService itemService
+@using ViewModels
 <h1>Items</h1>
 @if (items == null)
 {
-    <p><em>Loading...</em></p>
+    <p><em>Null</em></p>
 }
 else
 {
@@ -35,18 +34,42 @@ else
     </table>
 }
 @code{
-
-    private ItemDTO[] items;
-    ItemDTO obj = new ItemDTO();
-    string ids = "0";
-    bool showAddrow = false;
-
-    bool loadFailed;
-
-    protected override async Task OnInitializedAsync()
+    private int _id;
+    [Parameter]
+    public string Id
     {
-        ids = "0";
-        items = await Http.GetJsonAsync<ItemDTO[]>("/api/Item/");
+        get
+        {
+            return _id.ToString();
+        }
+        set
+        {
+            try
+            {
+                _id = Int32.Parse(value);
+            }
+            catch
+            {
+                _id = 0;
+            }
+        }
     }
 
+    List<ItemViewModel> items;
+    protected override async Task OnInitializedAsync()
+    {
+        int id = Int32.Parse(Id);
+        if (id == 0)
+            items= await itemService.GetAllItems();
+        else if (id > 0)
+        {
+            ItemViewModel item = await itemService.GetItemById(id);
+            if (item != null)
+            {
+                items = new List<ItemViewModel>();
+                items.Add(item);
+            }
+        }
+
+    }
 }

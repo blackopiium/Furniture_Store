@@ -25,9 +25,7 @@ namespace Furniture_Store.Business.Services
        public async Task<IEnumerable<ItemDTO>> GetAllItems()
         {
             var x = await _uow.Items.GetAll();
-            List<ItemDTO> result = new List<ItemDTO>();
-            foreach (var element in x)
-                result.Add(_mapper.Map<Item, ItemDTO>(element));
+            List<ItemDTO> result = _mapper.Map<List<ItemDTO>>(x);
             return result;
             
         }

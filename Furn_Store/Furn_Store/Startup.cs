@@ -2,11 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using BenchmarkDotNet.Validators;
 using FluentValidation;
+using FluentValidation.AspNetCore;
+using Furniture_Store;
 using Furniture_Store.Business.DTO;
 using Furniture_Store.Business.Interfaces;
 using Furniture_Store.Business.Services;
@@ -25,6 +28,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -55,7 +59,7 @@ namespace Furn_Store
                     options.UseSqlServer(Configuration.GetConnectionString("RepositoryContext")));*/
             services.AddMvc();
             #region automapper
-            services.AddAutoMapper(cfg=>
+            /*services.AddAutoMapper(cfg=>
             {
                 cfg.CreateMap<Item, ItemDTO>();
                 cfg.CreateMap<Category, CategoryDTO>();
@@ -64,7 +68,8 @@ namespace Furn_Store
                 cfg.CreateMap<Charachteristics_Item, Charachteristic_Item_DTO>();
                 cfg.CreateMap<Client, ClientDTO>();
                 cfg.CreateMap<Order_Items, Order_Items_DTO>();
-            },typeof(Startup));
+            },typeof(Startup));*/
+            services.AddAutoMapper(typeof(MappingProfile).GetTypeInfo().Assembly);
             #endregion
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             #region Repositories
@@ -85,15 +90,15 @@ namespace Furn_Store
             services.AddTransient<IOrder_Items_Service, Order_Items_Service>();
             services.AddTransient<IOrderService, OrderService>();
             #endregion
-            services.AddIdentity<User, IdentityRole>(opt =>
+            services.AddIdentity<MyUser, MyRole>(opt =>
             {
+                opt.User.RequireUniqueEmail = true;
                 opt.Password.RequiredLength = 6;
                 opt.Password.RequireDigit = false;
                 opt.Password.RequireUppercase = false;
                 opt.Password.RequireNonAlphanumeric = false;
-            })
-                .AddEntityFrameworkStores<RepositoryContext>()
-                .AddDefaultTokenProviders();
+
+            }).AddEntityFrameworkStores<RepositoryContext>();
             #region validators
             services.AddSingleton<IValidator<ItemDTO>, ItemDTOValidator>();
             services.AddSingleton<IValidator<CategoryDTO>, CategoryDTOValidator>();
@@ -104,14 +109,50 @@ namespace Furn_Store
             services.AddSingleton<IValidator<Charachteristic_Item_DTO>, Charachteristircs_Item_DTO_Validator>();
             #endregion
             services.AddTransient<ISortHepler<Item>, SortHelper<Item>>();
-
+            #region tokens
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options =>
+                    {
+                        options.RequireHttpsMetadata = false;
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuer = true,
+                            ValidIssuer = Configuration["JwtIssuer"],
+                            ValidateAudience = true,
+                            ValidAudience = Configuration["JwtAudience"],
+                            ValidateLifetime = true,
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSecurityKey"])),
+                            ValidateIssuerSigningKey = true,
+                            ClockSkew = TimeSpan.Zero
+                        };
+                    });
+            #endregion
             // api user claim policy
             /*services.AddAuthorization(options =>
             {
                 options.AddPolicy("ApiUser", policy => policy.RequireClaim(Constants.Strings.JwtClaimIdentifiers.Rol, Constants.Strings.JwtClaims.ApiAccess));
             });*/
-
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+                .AddFluentValidation(fv=>fv.RegisterValidatorsFromAssemblyContaining<ItemDTOValidator>());
             services.AddMvc();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(opt =>
+                {
+                    opt.RequireHttpsMetadata = false;
+                    opt.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidIssuer = Configuration["JwtIssuer"],
+                        ValidateAudience=true,
+                        ValidAudience=Configuration["JwtAudience"],
+                        ValidateLifetime=true,
+                        IssuerSigningKey=new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSecurityKey"])),
+                        ValidateIssuerSigningKey=true,
+                        ClockSkew=TimeSpan.Zero
+
+                    };
+                });
+            services.AddServerSideBlazor();
         }
 
 

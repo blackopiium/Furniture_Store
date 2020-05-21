@@ -5,9 +5,7 @@ using System.Text;
 
 namespace Furniture_Store.Data.Models
 {
-    public class User : IdentityUser
+    public class MyRole : IdentityRole<int>
     {
-
-
     }
 }
