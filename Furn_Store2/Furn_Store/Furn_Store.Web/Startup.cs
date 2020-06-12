@@ -1,18 +1,25 @@
 using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Furn_Store.Web.Data;
-using Microsoft.AspNetCore.Components.Authorization;
 using Furn_Store.Web.Services;
-using Microsoft.AspNetCore.Components.Server;
+using Furn_Store.Data.Interfaces;
+using Furn_Store.Data.Data.EFCore;
+using Furn_Store.Data.UnitOfWorkFolder;
+using Furn_Store.Business.Interfaces;
+using Blazored.LocalStorage;
 
 namespace Furn_Store.Web
 {
@@ -31,11 +38,32 @@ namespace Furn_Store.Web
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
-            services.AddSingleton<WeatherForecastService>();
-            services.AddHttpClient<ItemsService>(client =>
+            services.AddSingleton<HttpClient>();
+            services.AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>();
+            services.AddBlazoredLocalStorage();
+            services.AddServerSideBlazor().AddCircuitOptions(option =>
             {
-                client.BaseAddress = new Uri("https://localhost:44341");
+                option.DetailedErrors = true;
+            });
+            services.AddHttpClient<ItemService>(client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:44360");
+            });
+            services.AddHttpClient<AccountService>(client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:44360");
+            });
+            services.AddHttpClient<CategoryService>(client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:44360");
+            });
+            services.AddHttpClient<FactoryService>(client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:44360");
+            });
+            services.AddHttpClient<CharachteristicsService>(client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:44360");
             });
         }
 
@@ -64,6 +92,7 @@ namespace Furn_Store.Web
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });

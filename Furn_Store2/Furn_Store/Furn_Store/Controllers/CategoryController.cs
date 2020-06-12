@@ -17,7 +17,6 @@ namespace Furn_Store.Controllers
             _service = service;
         }
         [HttpGet]
-        [Route("Category")]
         public async Task<IActionResult> GetCategories()
         {
             try
@@ -30,8 +29,7 @@ namespace Furn_Store.Controllers
             }
 
         }
-        [HttpGet]
-        [Route("Category/{Id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetCategoryById(int id)
         {
             try

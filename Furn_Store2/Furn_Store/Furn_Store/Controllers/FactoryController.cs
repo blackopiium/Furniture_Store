@@ -17,7 +17,6 @@ namespace Furn_Store.Controllers
             _service = service;
         }
         [HttpGet]
-        [Route("Factory")]
         public async Task<IActionResult> GetFactories()
         {
             try
@@ -29,8 +28,7 @@ namespace Furn_Store.Controllers
                 return StatusCode(404);
             }
         }
-        [HttpGet]
-        [Route("Factory/{Id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetFactoryById(int id)
         {
             try

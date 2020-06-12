@@ -4,6 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using FluentValidation;
 using Furn_Store.Business.DTO;
 using Furn_Store.Business.Interfaces;
@@ -22,6 +24,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.IdentityModel.Logging;
+using Furn_Store.Business;
+using System.Text;
 
 namespace Furn_Store
 {
@@ -39,7 +46,7 @@ namespace Furn_Store
         {
            services.AddDbContext<RepositoryContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:FurnitureStoreDB1"]));
             #region automapper
-            /*services.AddAutoMapper(cfg=>
+           /* services.AddAutoMapper(cfg =>
             {
                 cfg.CreateMap<Item, ItemDTO>();
                 cfg.CreateMap<Category, CategoryDTO>();
@@ -48,7 +55,7 @@ namespace Furn_Store
                 cfg.CreateMap<Charachteristics_Item, Charachteristic_Item_DTO>();
                 cfg.CreateMap<Client, ClientDTO>();
                 cfg.CreateMap<Order_Items, Order_Items_DTO>();
-            },typeof(Startup));*/
+            }, typeof(Startup));*/
             services.AddAutoMapper(typeof(MappingProfile).GetTypeInfo().Assembly);
             #endregion
             #region unitofwork
@@ -67,7 +74,7 @@ namespace Furn_Store
             services.AddTransient<IItemService, ItemService>();
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IFactoryService, FactoryService>();
-            services.AddTransient<ICharachteristics_Service, Charachteristics_Item_Service>();
+            services.AddTransient<ICharachteristics_Service, CharachteristicsService>();
             services.AddTransient<IClientService, ClientService>();
             services.AddTransient<IOrder_Items_Service, Order_Items_Service>();
             services.AddTransient<IOrderService, OrderService>();
@@ -75,13 +82,13 @@ namespace Furn_Store
             services.AddTransient<IAccountService, AccountService>();
             #endregion
             #region validators
-            services.AddSingleton<IValidator<ItemDTO>, ItemDTOValidator>();
+           /* services.AddSingleton<IValidator<ItemDTO>, ItemDTOValidator>();
             services.AddSingleton<IValidator<CategoryDTO>, CategoryDTOValidator>();
             services.AddSingleton<IValidator<FactoryDTO>, FactoryDTOValidator>();
             services.AddSingleton<IValidator<ClientDTO>, ClientDTOValidator>();
             services.AddSingleton<IValidator<OrderDTO>, OrderDTOValidator>();
             services.AddSingleton<IValidator<Order_Items_DTO>, Order_Items_DTO_Validator>();
-            services.AddSingleton<IValidator<Charachteristic_Item_DTO>, Charachteristircs_Item_DTO_Validator>();
+            services.AddSingleton<IValidator<Charachteristic_Item_DTO>, Charachteristircs_Item_DTO_Validator>();*/
             #endregion
             services.AddTransient<ISortHepler<Item>, SortHelper<Item>>();
             services.AddIdentity<MyUser, MyRole>(opt =>
@@ -94,10 +101,38 @@ namespace Furn_Store
                 opt.Password.RequireNonAlphanumeric = false;
 
             }).AddEntityFrameworkStores<RepositoryContext>();
-            services.AddMvc();
+            services.AddMvc(option => option.EnableEndpointRouting = false)
+              .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+              .AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
             /* services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                  .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<ItemDTOValidator>());*/
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options =>
+                    {
+                        options.RequireHttpsMetadata = false;
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            // укзывает, будет ли валидироваться издатель при валидации токена
+                            ValidateIssuer = true,
+                            // строка, представляющая издателя
+                            ValidIssuer = Configuration["JwtIssuer"],
+
+                            // будет ли валидироваться потребитель токена
+                            ValidateAudience = true,
+                            // установка потребителя токена
+                            ValidAudience = Configuration["JwtAudience"],
+                            // будет ли валидироваться время существования
+                            ValidateLifetime = true,
+
+                            // установка ключа безопасности
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSecurityKey"])),
+                            // валидация ключа безопасности
+                            ValidateIssuerSigningKey = true,
+                            ClockSkew = TimeSpan.Zero
+                        };
+                    });
             services.AddControllers();
+            services.AddServerSideBlazor();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -106,27 +141,19 @@ namespace Furn_Store
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                IdentityModelEventSource.ShowPII = true;
             }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
-            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseRouting();
+
             app.UseAuthentication();
-            app.UseHttpsRedirection();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllers();
             });
         }
     }

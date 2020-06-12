@@ -1,0 +1,131 @@
+﻿@page "/items/add"
+@using ViewModels
+@using Microsoft.AspNetCore.Hosting
+@using Microsoft.AspNetCore.Http
+@using System.IO
+@inject IWebHostEnvironment _appEnviroment
+@inject Services.ItemService itemService
+@inject Services.CategoryService categoryService
+@inject Services.FactoryService factoryService
+<h3>ItemAdd</h3>
+<p>
+    <MatTextField @bind-Value="@Name" Label="Name"></MatTextField>
+</p>
+<p>
+    <MatTextField @bind-Value="@Price" Label="Price"></MatTextField>
+</p>
+<p>
+    <MatTextField @bind-Value="@Description" Label="Description" TextArea="true" Outlined="true"></MatTextField>
+</p>
+<p>
+    <MatSelectItem @bind-Value="@Category" Items="CategoriesName"></MatSelectItem>
+</p>
+<p>
+    <MatSelectItem @bind-Value="@Factory" Items="FactoriesName"></MatSelectItem>
+</p>
+<InputFile OnChange="HandleFileSelected" />
+@if (file != null)
+{
+<p>Загружен файл : @file.Name</p>}
+<br />
+<br />
+
+<button @onclick="Insert" class="btn btn-sm btn-primary">[Insert]</button>
+
+<p>@Error</p>
+@code {
+    public string Name { get; set; }
+    public float Price { get; set; }
+    public string Description { get; set; }
+
+    public List<CategoryViewModel> Categories;
+    public List<string> CategoriesName = new List<string>();
+    public string Category { get; set; }
+
+    public List<FactoryViewModel> Factories;
+    public List<string> FactoriesName = new List<string>();
+    public string Factory { get; set; }
+
+
+
+    public string Error { get; set; }
+    IFileListEntry file;
+    void HandleFileSelected(IFileListEntry[] files)
+    {
+        file = files.FirstOrDefault();
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        Categories = await categoryService.GetCategories();
+        foreach (var category in Categories)
+        {
+            CategoriesName.Add(category.name);
+        }
+        Factories = await factoryService.GetFactories();
+        foreach (var factory in Factories)
+        {
+            FactoriesName.Add(factory.name);
+        }
+    }
+    protected async Task Insert()
+    {
+        Error = "";
+        try
+        {
+            int CategoryId = Categories.First(x => x.name == Category).id;
+            int FactoryId = Factories.First(x => x.name == Factory).id;
+
+            string Path;
+            if (file == null)
+                throw new Exception("File not found");
+            if (file.Type != "image/jpeg")
+                throw new Exception("File in the wrong format! Please use .jpg");
+            ItemViewModel item = new ItemViewModel()
+            {
+                name = Name,
+                price = Price,
+                description = Description,
+                categoryId = CategoryId,
+                factoryId = FactoryId
+            };
+            Path = await AddFile(file);
+            item.imagePath = Path;
+
+            await itemService.AddItem(item);
+            ClearFields();
+        }
+        catch (Exception e)
+        {
+            Error = e.Message;
+        }
+    }
+    protected void ClearFields()
+    {
+        Name = "";
+        Price = 0;
+        Description = "";
+        file = null;
+    }
+    protected async Task<string> AddFile(IFileListEntry uploadedFile)
+    {
+        if (uploadedFile != null)
+        {
+            var newFile = await uploadedFile.ToImageFileAsync("image/jpeg", 720, 310);//resizing
+
+            var date = DateTime.Now;
+            string path = "/item_image/"
+                + $"{date.Year}_{date.Month}_{date.Day}_{date.Hour}_{date.Minute}_{date.Second}_"
+                + newFile.Name;//generating unique filename
+
+            using (var filestream = new FileStream(_appEnviroment.WebRootPath + path, FileMode.Create))
+            {
+                await newFile.Data.CopyToAsync(filestream);//сохранение файла по пути
+            }
+
+            return path;
+        }
+        else
+            return null;
+
+    }
+    }

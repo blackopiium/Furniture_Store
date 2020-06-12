@@ -26,7 +26,6 @@ namespace Furn_Store.Business.Services
             var x = await _uow.Items.GetAll();
             List<ItemDTO> result = _mapper.Map<List<ItemDTO>>(x);
             return result;
-
         }
         public async Task<ItemDTO> GetItem(int id)
         {
@@ -53,6 +52,12 @@ namespace Furn_Store.Business.Services
             var x = await _uow.Items.GetAllPagesFiltered(parameters);
             var list = _mapper.Map<PagedList<ItemDTO>>(x);
             return list;
+        }
+        public async Task<int> CountItems(ItemParameters parameters)
+        {
+            if (parameters.Category != null)
+                parameters.Category = parameters.Category.Trim().ToLower();
+            return await _uow.Items.CountItems(parameters);
         }
         public void Dispose()
         {

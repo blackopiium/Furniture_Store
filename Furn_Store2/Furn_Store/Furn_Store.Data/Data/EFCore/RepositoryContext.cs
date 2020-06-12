@@ -7,14 +7,18 @@ using System.Text;
 
 namespace Furn_Store.Data.Data.EFCore
 {
-    public class RepositoryContext : IdentityDbContext<MyUser, MyRole, int>
+    public partial class RepositoryContext : IdentityDbContext<MyUser, MyRole, int>
     {
-       
+
         public RepositoryContext(DbContextOptions options)
             : base(options)
         {
-            
+
         }
+       /* public RepositoryContext(DbContextOptions<RepositoryContext> options) :base(options)
+        {
+            Database.EnsureCreated();        
+        }*/
         public DbSet<Item> Items { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Factory> Factories { get; set; }
@@ -26,5 +30,6 @@ namespace Furn_Store.Data.Data.EFCore
         {
             base.OnModelCreating(modelBuilder);
         }
+
     }
 }

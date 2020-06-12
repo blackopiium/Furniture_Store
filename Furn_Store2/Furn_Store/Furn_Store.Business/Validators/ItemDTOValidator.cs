@@ -10,10 +10,10 @@ namespace Furn_Store.Business.Validators
     {
         public ItemDTOValidator()
         {
-            RuleFor(x => x.Id)
+          /*  RuleFor(x => x.Id)
             .NotNull()
             .NotEmpty()
-            .GreaterThan(0);
+            .GreaterThan(0);*/
             RuleFor(x => x.Name)
             .NotEmpty()
             .MaximumLength(30);

@@ -8,9 +8,8 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace Furn_Store.Controllers
-{
+{ 
     [Route("api/[controller]")]
-
     public class ItemController : Controller
     {
         IItemService _service;
@@ -19,8 +18,12 @@ namespace Furn_Store.Controllers
             _service = service;
         }
         [HttpGet]
-        public async Task<IActionResult> GetCategories([FromQuery]ItemParameters parameters)
+        public async Task<IActionResult> Get([FromQuery]ItemParameters parameters)
         {
+            if (!parameters.ValidPriceRange)
+            {
+                return BadRequest("bahama mama");
+            }
             try
             {
                 var items = await _service.GetItemPagesFiltered(parameters);
@@ -40,7 +43,11 @@ namespace Furn_Store.Controllers
         {
             try
             {
-                return Ok(await _service.GetItem(id));
+                var items = await _service.GetItem(id);
+                if (items != null)
+                    return Ok(await _service.GetItem(id));
+                else
+                    return NotFound();
             }
             catch
             {
@@ -48,11 +55,13 @@ namespace Furn_Store.Controllers
             }
         }
         [HttpPost]
-        public async Task<IActionResult> AddCategory([FromBody]ItemDTO model)
+        public async Task<IActionResult> Post([FromBody] ItemDTO value)
         {
             try
             {
-                await _service.AddItem(model);
+                if (!ModelState.IsValid)
+                    return BadRequest("Invalid model");
+                await _service.AddItem(value);
                 return StatusCode(201);
             }
             catch
@@ -98,6 +107,11 @@ namespace Furn_Store.Controllers
             }
 
             return BadRequest();
+        }
+        [HttpGet("count")]
+        public async Task<IActionResult> CountItems([FromQuery] ItemParameters parameters)
+        {
+            return Ok(await _service.CountItems(parameters));
         }
     }
 }

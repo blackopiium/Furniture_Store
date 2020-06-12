@@ -45,6 +45,9 @@ namespace Furn_Store.Data.UnitOfWorkFolder
             _charach = charach;
             _orders = orders;
             _ord_it = ord_it;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _roleManager = roleManager;
             _itemSortHepler = itemSortHelper;
         }
         public IItemRepository Items

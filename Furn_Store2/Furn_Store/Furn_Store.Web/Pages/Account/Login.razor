@@ -1,0 +1,30 @@
+﻿@inject Services.AccountService accountService
+@inject NavigationManager NavigationManager
+@using ViewModels 
+@page "/login"
+<h3>Login</h3>
+<input type="text" @bind="login.username" placeholder="username" />
+<br />
+<input type="text" @bind="login.password" placeholder="password" />
+<br />
+<input type="password" @bind="login.rememberMe" placeholder="remember" />
+<br />
+<input type="button" value="Submit" @onclick="LoginS" />
+@code {
+    LoginViewModel login { get; set; } = new LoginViewModel();
+    public string Error;
+    private async Task LoginS()
+    {
+        Error = "";
+        var result = await accountService.Login(login);
+        if (result.success)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            Error = result.error;
+        }
+    }
+
+}

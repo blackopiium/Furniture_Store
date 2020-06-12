@@ -11,5 +11,6 @@ namespace Furn_Store.Data.Interfaces
     public interface IItemRepository : IRepository<Item, int>
     {
         public Task<PagedList<Item>> GetAllPagesFiltered(ItemParameters parameters);
+        public Task<int> CountItems(ItemParameters parameters);
     }
 }

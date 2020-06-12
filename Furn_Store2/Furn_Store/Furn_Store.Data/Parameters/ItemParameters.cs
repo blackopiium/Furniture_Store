@@ -6,8 +6,9 @@ namespace Furn_Store.Data.Parameters
 {
     public class ItemParameters : QueryStringParameters
     {
-        public float minPrice { get; set; } = 0;
-        public float maxPrice { get; set; } = float.MaxValue;
-        public bool validPriceRange => maxPrice >= minPrice && minPrice >= 0;
+        public float MinPrice { get; set; } = 0;
+        public float MaxPrice { get; set; } = float.MaxValue;
+        public bool ValidPriceRange => MaxPrice >= MinPrice && MinPrice >= 0;
+        public string Category { get; set; }
     }
 }

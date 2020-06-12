@@ -17,7 +17,7 @@ namespace Furn_Store.Data.Helpers
         public bool HasNext => CurrentPage < TotalPages;
         public PagedList(List<T> items, int count, int pageNumber, int pageSize)
         {
-            TotalPages = count;
+            TotalCount = count;
             PageSize = pageSize;
             CurrentPage = pageNumber;
             TotalPages = (int)Math.Ceiling(count / (double)pageSize);

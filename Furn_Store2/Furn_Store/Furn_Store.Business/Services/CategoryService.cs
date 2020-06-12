@@ -22,9 +22,7 @@ namespace Furn_Store.Business.Services
         public async Task<IEnumerable<CategoryDTO>> GetAllCategories()
         {
             var x = await _uow.Categories.GetAll();
-            List<CategoryDTO> result = new List<CategoryDTO>();
-            foreach (var element in x)
-                result.Add(_mapper.Map<Category, CategoryDTO>(element));
+            List<CategoryDTO> result = _mapper.Map<List<CategoryDTO>>(x);
             return result;
 
         }

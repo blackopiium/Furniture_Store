@@ -4,8 +4,12 @@ using Furn_Store.Data.Models;
 using Furn_Store.Data.Parameters;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq.Dynamic.Core;
+using Microsoft.EntityFrameworkCore;
 
 namespace Furn_Store.Data.Data.EFCore
 {
@@ -22,10 +26,17 @@ namespace Furn_Store.Data.Data.EFCore
         }
         public async Task<PagedList<Item>> GetAllPagesFiltered(ItemParameters parameters)
         {
-            var items = FindByCondition(x => x.Price >= parameters.minPrice && x.Price <= parameters.maxPrice);
+            var items = FindByCondition(x => x.Price >= parameters.MinPrice && x.Price <= parameters.MaxPrice); 
             items = _sortHelper.ApplySort(items, parameters);
             return await PagedList<Item>.ToPagedList(items, parameters.PageNumber, parameters.PageSize);
         }
 
+        public async Task<int> CountItems(ItemParameters parameters)
+        {
+            return await _context.Items.CountAsync(x =>
+               /*(x.CategoryId.Contains(parameters.Category) || string.IsNullOrWhiteSpace(parameters.Category))*/
+                x.Price <= parameters.MaxPrice
+               && x.Price >= parameters.MinPrice);
+        }
     }
 }

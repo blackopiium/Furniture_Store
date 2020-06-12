@@ -137,6 +137,9 @@ namespace Furn_Store.Data.Migrations
                     b.Property<int>("FactoryId")
                         .HasColumnType("int");
 
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 

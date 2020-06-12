@@ -16,6 +16,7 @@ namespace Furn_Store.Business.Interfaces
         Task<int> AddItem(ItemDTO item);
         Task DeleteItem(int id);
         Task<PagedList<ItemDTO>> GetItemPagesFiltered(ItemParameters parameters);
+        Task<int> CountItems(ItemParameters parameters);
         void Dispose();
     }
 }
