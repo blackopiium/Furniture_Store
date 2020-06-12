@@ -1,6 +1,6 @@
 ﻿
-<div class="product-item">
-    <div class="product-img">
+<div class="item-on-page">
+    <div class="item-img">
         <a href="items/@Id">
             @if (String.IsNullOrWhiteSpace(ImageSource))
             {
@@ -11,14 +11,9 @@
 
         </a>
     </div>
-    <div class="product-list">
+    <div class="items">
         <h3>@Name</h3>
         <span class="price">UAH @Price</span>
-        <div class="actions">
-            <div class="add-to-cart">
-                <a href="items/@Id" class="cart-button"></a>
-            </div>
-        </div>
     </div>
 </div>
 <style>
@@ -26,89 +21,51 @@
         box-sizing: border-box;
     }
 
-    .product-item {
+    .item-on-page {
         width: 45%;
-        margin: 0 auto;
-        padding: 10px 10px 20px 30px;
+        padding: 0px 0px 15px 25px;
         border: 1px solid #eee;
         background: white;
-        font-family: "Open Sans";
         overflow: hidden;
-        transition: .4s linear;
+        transition: .3s linear;
         float: left;
-        margin: 25px;
-        left: 30px;
+        margin: 30px;
     }
 
-        .product-item:hover {
+        .item-on-page:hover {
             transform: scale(1.1);
         }
 
-    .product-img {
+    .item-img {
         transition: 1s ease-in-out;
     }
 
-        .product-img img {
+        .item-img img {
             display: block;
             width: 100%;
         }
 
-    .product-list {
+    .items{
         margin-top: 15px;
     }
 
-        .product-list h3 {
+        .items h3 {
             font-weight: 700;
             color: #39404B;
             margin: 0;
             text-transform: uppercase;
-            font-size: 14px;
+            font-size: 20px;
             line-height: 2;
         }
 
     .price {
         color: #000000;
         display: block;
-        margin-bottom: 12px;
-    }
-
-    .actions {
-        border-top: 1px solid #eee;
-        padding-top: 4px;
-        font-size: 13px;
-        height: 30px;
-        line-height: 30px;
-    }
-
-        .actions:after {
-            content: "";
-            display: table;
-            clear: both;
-        }
-
-    .add-to-cart {
-        float: left;
-    }
-
-    .cart-button {
-        text-decoration: none;
-        color: #8C877C;
-        padding-right: 20px;
-        border-right: 1px solid #ddd;
-        transition: .4s linear;
-    }
-
-        .cart-button:before {
-            content: "\f07a";
-            font-family: FontAwesome;
-            margin-right: 10px;
-        }
-
-    .add-to-cart:hover .cart-button {
-        color: #E34D38;
+        margin-bottom: 10px;
     }
 </style>
-@code { [Parameter]
+@code { 
+    [Parameter]
             public string Id { get; set; }
             [Parameter]
             public string ImageSource { get; set; }
@@ -116,4 +73,4 @@
             public string Name{ get; set; }
             [Parameter]
             public string Price { get; set; }
-            }
+       }
