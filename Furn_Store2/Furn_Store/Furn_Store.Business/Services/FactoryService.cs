@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Furn_Store.Business.DTO;
 using Furn_Store.Business.Interfaces;
+using Furn_Store.Data.Helpers;
 using Furn_Store.Data.Models;
+using Furn_Store.Data.Parameters;
 using Furn_Store.Data.UnitOfWorkFolder;
 using System;
 using System.Collections.Generic;
@@ -25,6 +27,17 @@ namespace Furn_Store.Business.Services
             List<FactoryDTO> result = _mapper.Map<List<FactoryDTO>>(x);
             return result;
 
+        }
+        public async Task<PagedList<FactoryDTO>> GetItemPagesFiltered(FactoryParameters parameters)
+        {
+            var x = await _uow.Factories.GetAllPagesFiltered(parameters);
+            var list = _mapper.Map<PagedList<FactoryDTO>>(x);
+            return list;
+        }
+        public async Task<int> CountItems(FactoryParameters parameters)
+        {
+
+            return await _uow.Factories.CountItems(parameters);
         }
         public async Task<FactoryDTO> GetFactory(int id)
         {

@@ -1,15 +1,23 @@
 ﻿@inject Services.AccountService accountService
 @inject NavigationManager NavigationManager
-@using ViewModels 
+@using ViewModels
 @page "/login"
-<h3>Login</h3>
-<input type="text" @bind="login.username" placeholder="username" />
-<br />
-<input type="text" @bind="login.password" placeholder="password" />
-<br />
-<input type="password" @bind="login.rememberMe" placeholder="remember" />
-<br />
-<input type="button" value="Submit" @onclick="LoginS" />
+<h3>Вхід</h3>
+<EditForm Model="@login" OnValidSubmit="@LoginS">
+    <FluentValidator></FluentValidator>
+    <ValidationSummary />
+    <p>@Error</p>
+    <p>
+        <MatTextField @bind-Value="login.username" Label="Username"></MatTextField>
+    </p>
+    <p>
+        <MatTextField @bind-Value="login.password" Label="Пароль" Type="password"></MatTextField>
+    </p>
+    <p>
+        <MatCheckbox @bind-Value="login.rememberMe" Label="Запам'ятати"></MatCheckbox>
+    </p>
+    <button type="submit" class="btn btn-sm btn-primary">Увійти</button>
+</EditForm>
 @code {
     LoginViewModel login { get; set; } = new LoginViewModel();
     public string Error;

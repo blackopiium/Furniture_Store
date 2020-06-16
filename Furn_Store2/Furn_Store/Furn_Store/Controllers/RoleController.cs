@@ -18,7 +18,7 @@ namespace Furn_Store.Controllers
         {
             _roleService = roleService;
         }
-        [HttpPost]// назначает роль 
+        [HttpPost]
         [Route("GiveRole")]
         public async Task GiveRole([FromQuery] string id, [FromQuery] string role)
         {
@@ -26,14 +26,14 @@ namespace Furn_Store.Controllers
         }
 
         [HttpGet]
-        [Route("GetUserRoles")]//забирает роли пользователя
+        [Route("Roles")]
         public async Task<IList<string>> GetRoles([FromQuery] string id)
         {
             return await _roleService.GetAllRolesByUserId(id);
         }
 
 
-        [HttpPost]// создать новую роль
+        [HttpPost]
         [Route("CreateRole")]
         public async Task<IActionResult> CreateRole([FromBody] MyRoleDTO role)
         {

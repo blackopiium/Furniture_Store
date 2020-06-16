@@ -29,7 +29,7 @@ namespace Furn_Store.Web.Services
         }
         public async Task<List<ItemViewModel>> GetItems(ItemParameters parameters) 
         {
-            var response = await _httpClient.GetAsync($"api/item?PageSize={parameters.PageSize}&PageNumber={parameters.PageNumber}&MinPrice={parameters.MinPrice}&Brand={parameters.Category}&MaxPrice={parameters.MaxPrice}&OrderBy={parameters.OrderBy}");
+            var response = await _httpClient.GetAsync($"api/item?PageSize={parameters.PageSize}&PageNumber={parameters.PageNumber}&MinPrice={parameters.MinPrice}&Name={parameters.Name}&MaxPrice={parameters.MaxPrice}&OrderBy={parameters.OrderBy}");
             if (!response.IsSuccessStatusCode)
                 return null;
 

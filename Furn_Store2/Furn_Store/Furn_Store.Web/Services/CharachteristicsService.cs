@@ -25,14 +25,14 @@ namespace Furn_Store.Web.Services
             using var responseContent = await response.Content.ReadAsStreamAsync();
             return await JsonSerializer.DeserializeAsync<List<Charachterisitics_Item_ViewModel>>(responseContent);
         }
-        public async Task<Charachterisitics_Item_ViewModel> GetCharById(int id)
+        public async Task<string> GetCharById(int id)
         {
             var response = await _httpClient.GetAsync($"api/charachteristics/{id}");
             if (!response.IsSuccessStatusCode)
                 return null;
 
-            using var responseContent = await response.Content.ReadAsStreamAsync();
-            return await JsonSerializer.DeserializeAsync<Charachterisitics_Item_ViewModel>(responseContent);
+           var responseContent = await response.Content.ReadAsStringAsync();
+            return responseContent;
         }
         public async Task<HttpResponseMessage> AddCharach(Charachterisitics_Item_ViewModel charachterisitics)
         {

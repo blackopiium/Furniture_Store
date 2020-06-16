@@ -7,7 +7,5 @@ namespace Furn_Store.Data.Models
 {
     public class MyUser : IdentityUser<int>
     {
-
-
     }
 }

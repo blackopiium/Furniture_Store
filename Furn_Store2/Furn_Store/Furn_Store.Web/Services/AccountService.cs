@@ -31,6 +31,7 @@ namespace Furn_Store.Web.Services
         public async Task<LoginToken> Login(LoginViewModel login)
         {
             var response = await _httpClient.PostAsync("api/account/login", GetStringContentFromObject(login));
+
             using var responseContent = await response.Content.ReadAsStreamAsync();
             var loginToken = await JsonSerializer.DeserializeAsync<LoginToken>(responseContent);
             if (!response.IsSuccessStatusCode)
@@ -44,7 +45,7 @@ namespace Furn_Store.Web.Services
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", loginToken.token);
             return loginToken;
         }
-        public async Task Logout()
+        public async Task Exit()
         {
             await _localStorage.RemoveItemAsync("authToken");
             ((ApiAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsLoggedOut();

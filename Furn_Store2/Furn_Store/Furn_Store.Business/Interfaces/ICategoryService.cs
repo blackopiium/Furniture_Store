@@ -1,4 +1,6 @@
 ﻿using Furn_Store.Business.DTO;
+using Furn_Store.Data.Helpers;
+using Furn_Store.Data.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,6 +14,8 @@ namespace Furn_Store.Business.Interfaces
         Task<CategoryDTO> GetCategory(int id);
         Task UpdateCategory(CategoryDTO category);
         Task<int> AddCategory(CategoryDTO category);
+        Task<PagedList<CategoryDTO>> GetItemPagesFiltered(CategoryParameters parameters);
+        Task<int> CountItems(CategoryParameters parameters);
         Task DeleteCategory(int id);
         void Dispose();
     }

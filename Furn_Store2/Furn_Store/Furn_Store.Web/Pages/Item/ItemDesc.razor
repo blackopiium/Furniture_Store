@@ -1,8 +1,8 @@
 ﻿@page "/items/{id}"
-@using ViewModels
 @inject Services.ItemService itemService
 @inject Services.CharachteristicsService charService  
 @inject Services.CategoryService categoryService 
+@using ViewModels  
 @if (item==null)
 {
 <p> Товар не знайдено </p>
@@ -25,15 +25,11 @@ else
             </tr>
         </thead>
         <tbody>
-          @*  @foreach (var charach in charachterisitics)
-            {
+            
                 <tr>
-                    <td>@charach.width_it</td>
-                    <td>@charach.height_it</td>
-                    <td>@charach.length_it</td>
-                    <td>@charach.colour_it</td>
+                    <td>@charachterisitics</td>
                 </tr>
-            }*@
+            
         </tbody>
     </table>
 </p>
@@ -45,7 +41,7 @@ else
     string category { get; set; }
     [Parameter]
     public string Id { get; set; }
-    List<Charachterisitics_Item_ViewModel> charachterisitics;
+    string charachterisitics;
 
     protected override async Task OnInitializedAsync()
     {
@@ -55,6 +51,6 @@ else
         else
             imagePath = item.imagePath;
         category = await categoryService.GetById(item.categoryId);
-       @* charachterisitics = await charService.GetCharById(item.id);*@
+        charachterisitics = await charService.GetCharById(item.charachteristics_Item_Id);
     }
 }

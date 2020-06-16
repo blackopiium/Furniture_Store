@@ -14,5 +14,6 @@ namespace Furn_Store.Web.ViewModels
         public float price { get; set; }
         public int factoryId { get; set; }
         public string imagePath { get; set; }
+        public int charachteristics_Item_Id { get; set; }
     }
 }

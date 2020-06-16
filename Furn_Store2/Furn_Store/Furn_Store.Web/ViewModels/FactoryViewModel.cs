@@ -12,5 +12,6 @@ namespace Furn_Store.Web.ViewModels
         public string country { get; set; }
         public string city { get; set; }
         public string description { get; set; }
+        public string imagePath { get; set; }
     }
 }

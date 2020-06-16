@@ -9,6 +9,6 @@ namespace Furn_Store.Data.Parameters
         public float MinPrice { get; set; } = 0;
         public float MaxPrice { get; set; } = float.MaxValue;
         public bool ValidPriceRange => MaxPrice >= MinPrice && MinPrice >= 0;
-        public string Category { get; set; }
+        public string Name { get; set; }
     }
 }

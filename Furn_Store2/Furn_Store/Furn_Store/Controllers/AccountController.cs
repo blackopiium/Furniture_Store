@@ -1,7 +1,6 @@
 ﻿using Furn_Store.Business.DTO.Identity;
 using Furn_Store.Business.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -22,32 +21,40 @@ namespace Furn_Store.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        [Microsoft.AspNetCore.Mvc.Route("register")]
+        [Route("register")]
         public async Task<IActionResult> Register([FromBody]RegisterDTO myUser)
         {
-            return Ok(await _service.Register(myUser));
+            var result = await _service.Register(myUser);
+            if (result.Succeeded)
+                return Ok("User registered");
+            else
+            {
+                string Errors = "";
+                foreach (var error in result.Errors)
+                    Errors += $"{error.Description}\n";
+                return BadRequest(Errors);
+            }
         }
 
-        [HttpGet]
+        [HttpPost]
         [AllowAnonymous]
-        [Microsoft.AspNetCore.Mvc.Route("Login")]
+        [Route("Login")]
         public async Task<IActionResult> Login([FromBody] LoginDTO myUser)
         {
-            return Ok(await _service.Login(myUser));
+            var result = await _service.Login(myUser);
+            if (result.success)
+                return Ok(result);
+            else
+                return BadRequest(result);
         }
         [HttpGet]
-        [Microsoft.AspNetCore.Mvc.Route("Exit")]
+        [Route("Exit")]
         public async Task<IActionResult> Exit()
         {
             return Ok(await _service.Exit());
         }
-        [HttpGet]
-        [Microsoft.AspNetCore.Mvc.Route("Create")]
-        public async Task<IActionResult> Create([FromBody] MyUserDTO myUser)
-        {
-            return Ok(await _service.Create(myUser));
-        }
 
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public async Task<IActionResult> List()
         {

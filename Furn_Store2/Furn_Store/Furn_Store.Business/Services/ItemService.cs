@@ -55,8 +55,8 @@ namespace Furn_Store.Business.Services
         }
         public async Task<int> CountItems(ItemParameters parameters)
         {
-            if (parameters.Category != null)
-                parameters.Category = parameters.Category.Trim().ToLower();
+            if (parameters.Name != null)
+                parameters.Name = parameters.Name.Trim().ToLower();
             return await _uow.Items.CountItems(parameters);
         }
         public void Dispose()

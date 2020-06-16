@@ -16,17 +16,16 @@ namespace Furn_Store.Data.Data.EFCore
     public class ItemRepository : GenericRepository<Item, int>, IItemRepository
 
     {
-        /*private readonly RepositoryContext _repositoryContext;*/
         private readonly ISortHepler<Item> _sortHelper;
         public ItemRepository(RepositoryContext context, ISortHepler<Item> sortHelper)
              : base(context)
         {
-            /* _repositoryContext = context;*/
             _sortHelper = sortHelper;
         }
         public async Task<PagedList<Item>> GetAllPagesFiltered(ItemParameters parameters)
         {
-            var items = FindByCondition(x => x.Price >= parameters.MinPrice && x.Price <= parameters.MaxPrice); 
+            var items = FindByCondition(x => x.Price >= parameters.MinPrice && x.Price <= parameters.MaxPrice);
+            SearchByName(ref items, parameters.Name);
             items = _sortHelper.ApplySort(items, parameters);
             return await PagedList<Item>.ToPagedList(items, parameters.PageNumber, parameters.PageSize);
         }
@@ -34,9 +33,16 @@ namespace Furn_Store.Data.Data.EFCore
         public async Task<int> CountItems(ItemParameters parameters)
         {
             return await _context.Items.CountAsync(x =>
-               /*(x.CategoryId.Contains(parameters.Category) || string.IsNullOrWhiteSpace(parameters.Category))*/
-                x.Price <= parameters.MaxPrice
+               (x.Name.Contains(parameters.Name) || string.IsNullOrWhiteSpace(parameters.Name))
+               && x.Price <= parameters.MaxPrice
                && x.Price >= parameters.MinPrice);
+        }
+        private void SearchByName(ref IQueryable<Item> items, string name)
+        {
+            if (!items.Any() || string.IsNullOrWhiteSpace(name))
+                return;
+
+            items = items.Where(x => x.Name.ToLower().Contains(name.Trim().ToLower()));
         }
     }
 }

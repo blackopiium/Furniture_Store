@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Furn_Store.Business.Interfaces;
 using Furn_Store.Business.DTO.Identity;
+using Microsoft.AspNetCore.Identity;
 
 namespace Furn_Store.Business.Services
 {
@@ -26,63 +27,24 @@ namespace Furn_Store.Business.Services
             _mapper = mapper;
             _configuration = configuration;
         }
-        public async Task<string> Register(RegisterDTO myUser)
-        {
-            if (myUser.Password != myUser.PasswordConfirm)
-                return "Passwords aren't equal";
-
-            MyUser user = new MyUser { Email = myUser.Email, UserName = myUser.UserName };
-            var result = await _uow.userManager.CreateAsync(user, myUser.Password);
-            if (result.Succeeded)
-            {
-                await _uow.userManager.AddToRoleAsync(user, "user");
-                return "Registration is suceeded";
-            }
-            else
-            {
-                string ErrorMessage = "";
-                foreach (var error in result.Errors)
-                {
-                    ErrorMessage += error.Description + "\n";
-                }
-                return ErrorMessage;
-            }
-        }
-        public async Task<string> Create(MyUserDTO myUser)
+        public async Task<IdentityResult> Register(RegisterDTO myUser)
         {
             MyUser user = new MyUser { Email = myUser.Email, UserName = myUser.UserName };
             var result = await _uow.userManager.CreateAsync(user, myUser.Password);
-            if (result.Succeeded)
-            {
-                await _uow.userManager.AddToRoleAsync(user, "User");
-                return "User is registered";
-            }
-            else
-            {
-                string ErrorMessage = "";
-                foreach (var error in result.Errors)
-                {
-                    ErrorMessage += error.Description + "\n";
-                }
-                return ErrorMessage;
-            }
+            return result; 
         }
-        public async Task<object> Login(LoginDTO myUser)
+        public async Task<LoginToken> Login(LoginDTO myUser)
         {
             MyUser user = await _uow.userManager.FindByNameAsync(myUser.UserName);
             if (user != null)
             {
                 var result = await _uow.signInManager.PasswordSignInAsync(myUser.UserName, myUser.Password, myUser.RememberMe, false);
                 if (result.Succeeded)
-                {
-                    return CreateToken(user);
-                }
+                    return new LoginToken { token = await CreateToken(user), success = true };
                 else
-                {
-                    return "Invalid password or username";
-                }
+                    return new LoginToken { success = false, error = "Invalid password" };
             }
-            return "User doesn't exist";
+            return new LoginToken { success = false, error = "User not found" };
         }
         public async Task<string> Exit()
         {
@@ -93,17 +55,25 @@ namespace Furn_Store.Business.Services
         {
             return await _uow.userManager.Users.ToListAsync();
         }
-        private object CreateToken(MyUser myUser)
+        private async Task<string> CreateToken(MyUser myUser)
         {
 
-            var claims = new[]
+            var roles = await _uow.signInManager.UserManager.GetRolesAsync(myUser);
+            var claims = new List<Claim>();
+
+            claims.Add(new Claim(ClaimTypes.Name, myUser.UserName));
+            claims.Add(new Claim("accountId", myUser.Id.ToString()));
+            claims.Add(new Claim("email", myUser.Email));
+            foreach (var role in roles)
             {
-                new Claim(ClaimTypes.Name, myUser.UserName),
-                new Claim(ClaimTypes.Email, myUser.Email)
-            };
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
+
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSecurityKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expiration = DateTime.UtcNow.AddDays(double.Parse(_configuration["JwtExpiryInDays"]));
+
             JwtSecurityToken token = new JwtSecurityToken(
                 issuer: _configuration["JwtIssuer"],
                 audience: _configuration["JwtAudience"],
@@ -111,10 +81,8 @@ namespace Furn_Store.Business.Services
                 notBefore: DateTime.UtcNow,
                 expires: expiration,
                 signingCredentials: creds);
-            return new
-            {
-                Token = new JwtSecurityTokenHandler().WriteToken(token)
-            };
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

@@ -14,6 +14,7 @@ namespace Furn_Store.Data.Models
         public string Country { get; set; }
         public string City { get; set; }
         public string Description { get; set; }
+        public string ImagePath { get; set; }
         public List<Item> Items { get; set; }
     }
 }

@@ -15,10 +15,6 @@ namespace Furn_Store.Data.Data.EFCore
         {
 
         }
-       /* public RepositoryContext(DbContextOptions<RepositoryContext> options) :base(options)
-        {
-            Database.EnsureCreated();        
-        }*/
         public DbSet<Item> Items { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Factory> Factories { get; set; }
@@ -28,6 +24,26 @@ namespace Furn_Store.Data.Data.EFCore
         public DbSet<Order_Items> Order_Items { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+           /* modelBuilder.Entity<Factory>()
+                .HasMany(c => c.Items)
+                .WithOne(e => e.Factory);
+            modelBuilder.Entity<Category>()
+                .HasMany(c => c.Items)
+                .WithOne(e => e.Category);
+            modelBuilder.Entity<Item>()
+                .HasMany(c => c.Order_Items)
+                .WithOne(e => e.Item);
+            modelBuilder.Entity<Item>()
+                .HasOne(a => a.Charachteristics_Item)
+                .WithOne(b => b.Item)
+                .HasForeignKey<Charachteristics_Item>(b => b.Id);
+            modelBuilder.Entity<Order>()
+                .HasMany(c => c.Order_Items)
+                .WithOne(e => e.Order);
+            modelBuilder.Entity<Client>()
+                .HasMany(c => c.Orders)
+                .WithOne(e => e.Client);*/
+
             base.OnModelCreating(modelBuilder);
         }
 

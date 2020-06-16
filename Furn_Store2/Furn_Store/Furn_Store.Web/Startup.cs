@@ -20,6 +20,8 @@ using Furn_Store.Data.Data.EFCore;
 using Furn_Store.Data.UnitOfWorkFolder;
 using Furn_Store.Business.Interfaces;
 using Blazored.LocalStorage;
+using Furn_Store.Web.Validators;
+using FluentValidation;
 
 namespace Furn_Store.Web
 {
@@ -65,6 +67,18 @@ namespace Furn_Store.Web
             {
                 client.BaseAddress = new Uri("https://localhost:44360");
             });
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+            var supportedCultures = new List<CultureInfo> { new CultureInfo("ua"), new CultureInfo("en") };
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture("ua");
+                options.SupportedUICultures = supportedCultures;
+            });
+            services.AddValidatorsFromAssemblyContaining<ItemViewModelValidator>();
+            services.AddValidatorsFromAssemblyContaining<CategoryViewModelValidator>();
+            services.AddValidatorsFromAssemblyContaining<FactoryViewModelValidator>();
+            services.AddValidatorsFromAssemblyContaining<RegisterViewModelValidator>();
+            services.AddValidatorsFromAssemblyContaining<LoginViewModelValidator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

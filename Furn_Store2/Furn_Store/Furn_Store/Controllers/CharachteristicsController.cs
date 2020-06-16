@@ -56,8 +56,7 @@ namespace Furn_Store.Controllers
                 return StatusCode(400);
             }
         }
-        [HttpDelete]
-        [Route("Charachteristics_Item/{Id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCharc(int id)
         {
             try

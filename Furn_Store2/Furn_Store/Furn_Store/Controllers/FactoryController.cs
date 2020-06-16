@@ -1,5 +1,6 @@
 ﻿using Furn_Store.Business.DTO;
 using Furn_Store.Business.Interfaces;
+using Furn_Store.Data.Parameters;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -17,16 +18,25 @@ namespace Furn_Store.Controllers
             _service = service;
         }
         [HttpGet]
-        public async Task<IActionResult> GetFactories()
+        public async Task<IActionResult> GetFactories([FromQuery] FactoryParameters parameters)
         {
             try
             {
-                return Ok(await _service.GetAllFactories());
+                var items = await _service.GetItemPagesFiltered(parameters);
+                if (items != null)
+                    return Ok(items);
+                else
+                    return NotFound();
             }
             catch
             {
-                return StatusCode(404);
+                return NotFound();
             }
+        }
+        [HttpGet("count")]
+        public async Task<IActionResult> CountItems([FromQuery] FactoryParameters parameters)
+        {
+            return Ok(await _service.CountItems(parameters));
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetFactoryById(int id)
@@ -41,11 +51,13 @@ namespace Furn_Store.Controllers
             }
         }
         [HttpPost]
-        [Route("Factory")]
+       /* [Route("Factory")]*/
         public async Task<IActionResult> AddFactory([FromBody] FactoryDTO model)
         {
             try
             {
+                if (!ModelState.IsValid)
+                    return BadRequest("Invalid model");
                 await _service.AddFactory(model);
                 return StatusCode(201);
             }
@@ -54,8 +66,7 @@ namespace Furn_Store.Controllers
                 return StatusCode(400);
             }
         }
-        [HttpDelete]
-        [Route("Factory/{Id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFactory(int id)
         {
             try
@@ -69,7 +80,7 @@ namespace Furn_Store.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPut]
         public async Task<IActionResult> UpdateCategory([FromBody]FactoryDTO model)
         {
             try

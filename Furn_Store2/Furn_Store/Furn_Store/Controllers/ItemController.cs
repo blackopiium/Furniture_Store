@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace Furn_Store.Controllers
-{ 
+{
     [Route("api/[controller]")]
     public class ItemController : Controller
     {
@@ -18,7 +18,7 @@ namespace Furn_Store.Controllers
             _service = service;
         }
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery]ItemParameters parameters)
+        public async Task<IActionResult> Get([FromQuery] ItemParameters parameters)
         {
             if (!parameters.ValidPriceRange)
             {
@@ -69,7 +69,7 @@ namespace Furn_Store.Controllers
                 return StatusCode(400);
             }
         }
-        [HttpDelete]
+        [HttpDelete("{id}")]
 
         public async Task<IActionResult> DeleteCategory(int id)
         {

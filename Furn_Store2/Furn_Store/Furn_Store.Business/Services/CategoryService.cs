@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Furn_Store.Business.DTO;
 using Furn_Store.Business.Interfaces;
+using Furn_Store.Data.Helpers;
 using Furn_Store.Data.Models;
+using Furn_Store.Data.Parameters;
 using Furn_Store.Data.UnitOfWorkFolder;
 using System;
 using System.Collections.Generic;
@@ -45,6 +47,17 @@ namespace Furn_Store.Business.Services
         public async Task DeleteCategory(int id)
         {
             await _uow.Categories.Remove(id);
+        }
+        public async Task<PagedList<CategoryDTO>> GetItemPagesFiltered(CategoryParameters parameters)
+        {
+            var x = await _uow.Categories.GetAllPagesFiltered(parameters);
+            var list = _mapper.Map<PagedList<CategoryDTO>>(x);
+            return list;
+        }
+        public async Task<int> CountItems(CategoryParameters parameters)
+        {
+            
+            return await _uow.Categories.CountItems(parameters);
         }
         public void Dispose()
         {
